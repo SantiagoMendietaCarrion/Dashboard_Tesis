@@ -1,12 +1,13 @@
 import os
 import pickle
 import streamlit as st
+import pandas as pd
 from streamlit_option_menu import option_menu
 
 # Set page configuration
-st.set_page_config(page_title="Health Assistant",
+st.set_page_config(page_title="Purchase prediction",
                    layout="wide",
-                   page_icon="🧑‍⚕️")
+                   page_icon="📦")
 
     
 # getting the working directory of the main.py
@@ -22,70 +23,79 @@ parkinsons_model = pickle.load(open(f'{working_dir}/saved_models/parkinsons_mode
 
 # sidebar for navigation
 with st.sidebar:
-    selected = option_menu('Multiple Disease Prediction System',
+    selected = option_menu('Sistema de predicción de compra',
 
-                           ['Diabetes Prediction',
-                            'Heart Disease Prediction',
-                            'Parkinsons Prediction'],
+                           ['1. Ingreso de archivos',
+                            '2. Métricas de evaluación',
+                            '3. Resultados obtenidos'],
                            menu_icon='hospital-fill',
                            icons=['activity', 'heart', 'person'],
                            default_index=0)
 
 
 # Diabetes Prediction Page
-if selected == 'Diabetes Prediction':
+if selected == '1. Ingreso de archivos':
 
-    # page title
-    st.title('Diabetes Prediction using ML')
+    # Título de la página
+    st.title('Ingreso de archivos en formato csv')
+
+    # Ingreso de archivos
+    uploaded_file = st.file_uploader("Choose a CSV file")
 
     # getting the input data from the user
-    col1, col2, col3 = st.columns(3)
+    #col1, col2, col3 = st.columns(3)
 
-    with col1:
-        Pregnancies = st.text_input('Number of Pregnancies')
+    #with col1:
+    #    Pregnancies = st.text_input('Number of Pregnancies')
 
-    with col2:
-        Glucose = st.text_input('Glucose Level')
+    #with col2:
+    #    Glucose = st.text_input('Glucose Level')
 
-    with col3:
-        BloodPressure = st.text_input('Blood Pressure value')
+    #with col3:
+    #    BloodPressure = st.text_input('Blood Pressure value')
 
-    with col1:
-        SkinThickness = st.text_input('Skin Thickness value')
+    #with col1:
+    #    SkinThickness = st.text_input('Skin Thickness value')
 
-    with col2:
-        Insulin = st.text_input('Insulin Level')
+    #with col2:
+    #    Insulin = st.text_input('Insulin Level')
 
-    with col3:
-        BMI = st.text_input('BMI value')
+    #with col3:
+    #    BMI = st.text_input('BMI value')
 
-    with col1:
-        DiabetesPedigreeFunction = st.text_input('Diabetes Pedigree Function value')
+    #with col1:
+    #    DiabetesPedigreeFunction = st.text_input('Diabetes Pedigree Function value')
 
-    with col2:
-        Age = st.text_input('Age of the Person')
+    #with col2:
+    #    Age = st.text_input('Age of the Person')
 
 
     # code for Prediction
-    diab_diagnosis = ''
+    #diab_diagnosis = ''
 
-    # creating a button for Prediction
+    # Botón para visualizar el archivo CSV
 
-    if st.button('Diabetes Test Result'):
+    if st.button('Visualizar el archivo'):
 
-        user_input = [Pregnancies, Glucose, BloodPressure, SkinThickness, Insulin,
-                      BMI, DiabetesPedigreeFunction, Age]
+      #Carga de Dataset
+      data = pd.read_csv(uploaded_file)
 
-        user_input = [float(x) for x in user_input]
+      #Mostrar el dataframe
+      st.dataframe(data, width=1800, height=1200)
 
-        diab_prediction = diabetes_model.predict([user_input])
+    #    user_input = [Pregnancies, Glucose, BloodPressure, SkinThickness, Insulin,
+    #                  BMI, DiabetesPedigreeFunction, Age]
 
-        if diab_prediction[0] == 1:
-            diab_diagnosis = 'The person is diabetic'
-        else:
-            diab_diagnosis = 'The person is not diabetic'
+    #    user_input = [float(x) for x in user_input]
 
-    st.success(diab_diagnosis)
+    #    diab_prediction = diabetes_model.predict([user_input])
+
+    #    if diab_prediction[0] == 1:
+    #        diab_diagnosis = 'The person is diabetic'
+    #    else:
+    #        diab_diagnosis = 'The person is not diabetic'
+
+    #st.success(diab_diagnosis)
 
 # Heart Disease Prediction Page
 if selected == 'Heart Disease Prediction':
