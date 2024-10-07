@@ -64,6 +64,9 @@ if selected == '2. Métricas de evaluación':
     # Botón para visualizar las métricas de evaluación
     if st.button('Calcular las métricas de evaluación'):
 
+      #Carga de Dataset
+      data_nuevo17 = pd.read_csv(uploaded_file, sep=",")
+
       # Selección de las mejores variables mediante SelectKBest Escenario 2
       X=data_nuevo17.drop(['Purchase'], axis=1)
       y=data_nuevo17['Purchase']
