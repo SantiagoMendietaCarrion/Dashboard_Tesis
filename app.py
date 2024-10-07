@@ -88,7 +88,26 @@ if selected == '2. Métricas de evaluación':
       scaler1 = StandardScaler()
       features_NormStd = scaler1.fit_transform(features)
       features_NormStd = pd.DataFrame(features_NormStd, columns=features.columns)
-      features_NormStd
+
+      # División de los datos en entrenamiento y testeo
+      train_X, test_X, train_Y, test_Y = train_test_split(features_NormStd, target, test_size=0.3, random_state=46, shuffle=True)
+
+      # Variables de entrenamiento (features) no balanceadas
+      train_X2=train_X[variables_selectkbest2]
+
+      # Variable de entrenamiento (target) no balanceadas
+      train_Y2=train_Y.copy()
+
+      # Variables de testeo (features)
+      test_X2=test_X[variables_selectkbest2]
+
+      # Variable de testeo (target)
+      test_Y2=test_Y.copy()
+
+      # Dataframe con el valor real y el valor predecido
+      pcp_predictions2 = best_pcp_model2.predict(test_X2)  #Realizar la predicción
+      pcp_df2 = pd.DataFrame({'Valor real':test_Y2,'Valor predecido': pcp_predictions2}) #Crear dataframe (y_real, pcp_predictions)
+      pcp_df2
 
 # Ventana para la visualización de los resultados obtenidos
 if selected == "3. Resultados obtenidos":
