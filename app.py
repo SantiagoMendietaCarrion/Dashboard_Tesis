@@ -79,7 +79,6 @@ if selected == '2. Métricas de evaluación':
       variables_selectkbest_prev = list(X.columns[selected2])
       variables_selectkbest_prev.pop()
       variables_selectkbest2=variables_selectkbest_prev.copy()
-      variables_selectkbest2
 
 # Ventana para la visualización de los resultados obtenidos
 if selected == "3. Resultados obtenidos":
