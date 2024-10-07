@@ -28,74 +28,29 @@ with st.sidebar:
                            ['1. Ingreso de archivos',
                             '2. Métricas de evaluación',
                             '3. Resultados obtenidos'],
-                           menu_icon='hospital-fill',
-                           icons=['activity', 'heart', 'person'],
+                           menu_icon='house',
+                           icons=['cloud-upload', 'cast', 'cast'],
                            default_index=0)
 
 
-# Diabetes Prediction Page
+# Ventana para ingreso y visualización de archivos
 if selected == '1. Ingreso de archivos':
 
-    # Título de la página
+    # Título de la ventana
     st.title('Ingreso de archivos en formato csv')
 
     # Ingreso de archivos
-    uploaded_file = st.file_uploader("Choose a CSV file")
-
-    # getting the input data from the user
-    #col1, col2, col3 = st.columns(3)
-
-    #with col1:
-    #    Pregnancies = st.text_input('Number of Pregnancies')
-
-    #with col2:
-    #    Glucose = st.text_input('Glucose Level')
-
-    #with col3:
-    #    BloodPressure = st.text_input('Blood Pressure value')
-
-    #with col1:
-    #    SkinThickness = st.text_input('Skin Thickness value')
-
-    #with col2:
-    #    Insulin = st.text_input('Insulin Level')
-
-    #with col3:
-    #    BMI = st.text_input('BMI value')
-
-    #with col1:
-    #    DiabetesPedigreeFunction = st.text_input('Diabetes Pedigree Function value')
-
-    #with col2:
-    #    Age = st.text_input('Age of the Person')
-
-
-    # code for Prediction
-    #diab_diagnosis = ''
+    uploaded_file = st.file_uploader("Escoja el archivo CSV")
 
     # Botón para visualizar el archivo CSV
 
     if st.button('Visualizar el archivo'):
 
       #Carga de Dataset
-      data = pd.read_csv(uploaded_file)
+      data = pd.read_csv(uploaded_file, sep=",")
 
       #Mostrar el dataframe
       st.dataframe(data, width=1800, height=1200)
-
-    #    user_input = [Pregnancies, Glucose, BloodPressure, SkinThickness, Insulin,
-    #                  BMI, DiabetesPedigreeFunction, Age]
-
-    #    user_input = [float(x) for x in user_input]
-
-    #    diab_prediction = diabetes_model.predict([user_input])
-
-    #    if diab_prediction[0] == 1:
-    #        diab_diagnosis = 'The person is diabetic'
-    #    else:
-    #        diab_diagnosis = 'The person is not diabetic'
-
-    #st.success(diab_diagnosis)
 
 # Heart Disease Prediction Page
 if selected == 'Heart Disease Prediction':
