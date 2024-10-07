@@ -13,7 +13,7 @@ st.set_page_config(page_title="Purchase prediction",
 working_dir = os.path.dirname(os.path.abspath(__file__))
 
 # lCargar el modelo de machine learning
-diabetes_model = pickle.load(open(f'{working_dir}/saved_models/best_pcp_model2.pkl', 'rb'))
+best_pcp_model2 = pickle.load(open(f'{working_dir}/saved_models/best_pcp_model2.pkl', 'rb'))
 
 # Barra lateral para la navegación
 with st.sidebar:
