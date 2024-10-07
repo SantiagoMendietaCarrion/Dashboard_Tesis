@@ -107,7 +107,44 @@ if selected == '2. Métricas de evaluación':
       # Dataframe con el valor real y el valor predecido
       pcp_predictions2 = best_pcp_model2.predict(test_X2)  #Realizar la predicción
       pcp_df2 = pd.DataFrame({'Valor real':test_Y2,'Valor predecido': pcp_predictions2}) #Crear dataframe (y_real, pcp_predictions)
-      pcp_df2
+
+      # Matriz de confusión
+      pcp_cm2 = confusion_matrix(test_Y2, pcp_predictions2)
+
+      # Obtener el reporte de métricas de evaluación en formato de diccionario
+      targets = ['0', '1']
+      pcp_report_dict2=classification_report(test_Y2, pcp_predictions2, target_names=targets, output_dict=True)
+
+      # Obtener la exactitud (accuracy) de los datos de prueba
+      pcp_accuracy_test2 = best_pcp_model2.score(test_X2, test_Y2)
+
+      # Probabilidades o puntajes de confianza
+      pcp_probabilities2=best_pcp_model2.decision_function(test_X2)
+
+      # Obtener AUC Score
+      pcp_auc_score2=roc_auc_score(test_Y2, pcp_probabilities2)
+
+      # Obtener Precision Score
+      pcp_average_precision_score2=average_precision_score(test_Y2, pcp_probabilities2)
+
+      # Dataframe con los resultados de las métricas de evaluación
+      pcp_report_df2=pd.DataFrame(pcp_report_dict2)
+      pcp_report_df2.reset_index(inplace=True)
+      pcp_report_df2.drop(columns=['accuracy'], inplace=True)
+      pcp_report_df2.columns=['metric', 'class 0', 'class 1', 'macro avg', 'weighted avg']
+      accuracy_row=['accuracy', '0','0', pcp_accuracy_test2, '0']
+      auc_score_row=['auc_score', '0','0', pcp_auc_score2, '0']
+      precision_score_row=['precision_score', '0','0', pcp_average_precision_score2, '0']
+      pcp_report_df2.loc[2.1]=accuracy_row
+      pcp_report_df2.loc[2.2]=auc_score_row
+      pcp_report_df2.loc[2.3]=precision_score_row
+      pcp_report_df2.sort_index(inplace=True)
+      pcp_report_df2.reset_index(drop=True, inplace=True)
+      pcp_report_df2['class 0']=pcp_report_df2['class 0'].apply(lambda x: round(float(x),2))
+      pcp_report_df2['class 1']=pcp_report_df2['class 1'].apply(lambda x: round(float(x),2))
+      pcp_report_df2['macro avg']=pcp_report_df2['macro avg'].apply(lambda x: round(float(x),2))
+      pcp_report_df2['weighted avg']=pcp_report_df2['weighted avg'].apply(lambda x: round(float(x),2))
+      pcp_report_df2
 
 # Ventana para la visualización de los resultados obtenidos
 if selected == "3. Resultados obtenidos":
