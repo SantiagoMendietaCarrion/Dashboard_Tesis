@@ -80,6 +80,16 @@ if selected == '2. Métricas de evaluación':
       variables_selectkbest_prev.pop()
       variables_selectkbest2=variables_selectkbest_prev.copy()
 
+      # División del dataset nuevo en features y target
+      features=data_nuevo17.iloc[:, 0:data_nuevo17.shape[1]-1]
+      target=data_nuevo17.iloc[:, data_nuevo17.shape[1]-1]
+
+      # Normalización de los datos mediante StandardScaler
+      scaler1 = StandardScaler()
+      features_NormStd = scaler1.fit_transform(features)
+      features_NormStd = pd.DataFrame(features_NormStd, columns=features.columns)
+      features_NormStd
+
 # Ventana para la visualización de los resultados obtenidos
 if selected == "3. Resultados obtenidos":
 
