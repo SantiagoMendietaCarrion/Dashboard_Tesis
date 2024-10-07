@@ -61,6 +61,9 @@ if selected == '2. Métricas de evaluación':
     # Título de la ventana
     st.title('Visualización de las métricas de evaluación')
 
+    # Ingreso de archivos
+    uploaded_file = st.file_uploader("Escoja el archivo CSV")
+
     # Botón para visualizar las métricas de evaluación
     if st.button('Calcular las métricas de evaluación'):
 
