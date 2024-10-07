@@ -144,42 +144,8 @@ if selected == '2. Métricas de evaluación':
       pcp_report_df2['class 1']=pcp_report_df2['class 1'].apply(lambda x: round(float(x),2))
       pcp_report_df2['macro avg']=pcp_report_df2['macro avg'].apply(lambda x: round(float(x),2))
       pcp_report_df2['weighted avg']=pcp_report_df2['weighted avg'].apply(lambda x: round(float(x),2))
-
-      # Gráfico de barras agrupado: Precision, Recall, F1-Score. Accuracy, AUC-Score, Precision-Score
-      evaluation_metrics = ("Precision", "Recall", "F1-Score", "Accuracy", "AUC-Score", "Precision-Score")
-      class_metrics = {
-          'class 0': pcp_report_df2.loc[0:5,"class 0"],
-          'class 1': pcp_report_df2.loc[0:5,"class 1"],
-          'macro avg': pcp_report_df2.loc[0:5,"macro avg"],
-          'weighted avg': pcp_report_df2.loc[0:5,"weighted avg"],
-      }
-
-      x = np.arange(len(evaluation_metrics))  # the label locations
-      width = 0.15  # the width of the bars
-      multiplier = 0
-      i=0
-      colors=['blue', 'red', 'orange', 'green']
-
-      fig, ax = plt.subplots(layout='constrained', figsize=(15,5))
-
-      for attribute, measurement in class_metrics.items():
-          offset = width * multiplier
-          rects = ax.bar(x + offset, measurement, width, label=attribute, color=colors[i])
-          ax.bar_label(rects, fmt=lambda x: x if x > 0 else '', padding=3)
-          multiplier+= 1
-          if i==3:
-            i=0
-          else:
-            i+=1
-      # Add some text for labels, title and custom x-axis tick labels, etc.
-      ax.set_xlabel('Metrics')
-      ax.set_ylabel('Values (0 a 1)')
-      ax.set_title('Evaluation metrics Perceptron Model-Escenario 2-Sin balanceo')
-      ax.set_xticks(x + width, evaluation_metrics)
-      ax.legend(loc='upper center', ncols=4)
-      ax.set_ylim(0, 1.1)
-      plt.show()
-
+      pcp_report_df2
+ 
 # Ventana para la visualización de los resultados obtenidos
 if selected == "3. Resultados obtenidos":
 
