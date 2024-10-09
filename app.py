@@ -175,7 +175,7 @@ if selected == '2. Métricas de evaluación':
       for attribute, measurement in class_metrics.items():
           offset = width * multiplier
           rects = ax.bar(x + offset, measurement, width, label=attribute, color=colors[i])
-          ax.bar_label(rects, fmt=lambda x: x if x > 0 else '', padding=3)
+          ax.bar_label(rects, fmt=lambda x: x if x > 0 else '', padding=3, fontsize=5)
           multiplier+= 1
           if i==3:
             i=0
