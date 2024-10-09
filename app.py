@@ -52,6 +52,23 @@ if selected == '1. Ingreso de archivos':
       #Carga de Dataset
       data_nuevo17 = pd.read_csv(uploaded_file, sep=",")
 
+      # Funcion para cargar el dataset
+      @st.cache
+      def load_data():
+        df1 = pd.read_csv(uploaded_file, sep=",")
+        return df1
+
+      # Función para configurar el estado de la sesión
+      def setup_session_state():
+        if 'loaded_data' not in st.session_state:
+         st.session_state.loaded_data = load_data()
+
+      # Llamar a función del estado de la sesión para obtener el dataframe (csv)
+      setup_session_state()
+
+      # Asignar el dataframe (csv) a la variable de la pagina actual
+      data_nuevo17 = st.session_state.loaded_data
+
       #Mostrar el dataframe
       st.dataframe(data_nuevo17, width=1800, height=1200)
 
@@ -61,15 +78,15 @@ if selected == '2. Métricas de evaluación':
     # Título de la ventana
     st.title('Visualización de las métricas de evaluación')
 
-    # Ingreso de archivos
-    uploaded_file = st.file_uploader("Escoja el archivo CSV")
+    # Llamar a función del estado de la sesión para obtener el dataframe (csv)
+    setup_session_state()
 
+    # Asignar el dataframe (csv) a la variable de la pagina actual
+    data_nuevo17 = st.session_state.loaded_data
+ 
     # Botón para visualizar las métricas de evaluación
     if st.button('Calcular las métricas de evaluación'):
-
-      #Carga de Dataset
-      data_nuevo17 = pd.read_csv(uploaded_file, sep=",")
-
+    
       # Selección de las mejores variables mediante SelectKBest Escenario 2
       X=data_nuevo17.drop(['Purchase'], axis=1)
       y=data_nuevo17['Purchase']
