@@ -170,7 +170,7 @@ if selected == '2. Métricas de evaluación':
       i=0
       colors=['blue', 'red', 'orange', 'green']
 
-      fig, ax = plt.subplots(layout='constrained', figsize=(10,4))
+      fig, ax = plt.subplots(layout='constrained')
 
       for attribute, measurement in class_metrics.items():
           offset = width * multiplier
@@ -194,7 +194,7 @@ if selected == '2. Métricas de evaluación':
 
       # Mostrar los resultados
       with col1:
-        st.dataframe(pcp_report_df2, width=900, height=600)
+        st.dataframe(pcp_report_df2)
       with col2:
         st.pyplot(fig)
 
