@@ -55,14 +55,14 @@ if selected == '1. Ingreso de archivos':
 
     # Ingreso de archivos
     st.session_state.loaded_csv = st.file_uploader("Escoja el archivo CSV")
-    uploaded_file=st.session_state.loaded_csv
+    #uploaded_file=st.session_state.loaded_csv
 
     # Botón para visualizar el archivo CSV
 
     if st.button('Visualizar el archivo'):
 
       # Carga de Dataset
-      st.session_state.loaded_df = pd.read_csv(uploaded_file, sep=",")
+      st.session_state.loaded_df = pd.read_csv(st.session_state.loaded_csv, sep=",")
       data_nuevo17 = st.session_state.loaded_df
  
       # Mostrar el dataframe
