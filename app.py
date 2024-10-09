@@ -24,6 +24,17 @@ working_dir = os.path.dirname(os.path.abspath(__file__))
 # Cargar el modelo de machine learning
 best_pcp_model2 = pickle.load(open(f'{working_dir}/saved_models/best_pcp_model2.pkl', 'rb'))
 
+# Funcion para cargar el dataset
+@st.cache
+def load_data():
+  df1 = pd.read_csv(uploaded_file, sep=",")
+  return df1
+
+# Función para configurar el estado de la sesión
+def setup_session_state(df1):
+  if 'loaded_data' not in st.session_state:
+    st.session_state.loaded_data = df1
+
 # Barra lateral para la navegación
 with st.sidebar:
     selected = option_menu('Sistema de predicción de compra',
@@ -52,23 +63,9 @@ if selected == '1. Ingreso de archivos':
       #Carga de Dataset
       data_nuevo17 = pd.read_csv(uploaded_file, sep=",")
 
-      # Funcion para cargar el dataset
-      @st.cache
-      def load_data():
-        df1 = pd.read_csv(uploaded_file, sep=",")
-        return df1
-
-      # Función para configurar el estado de la sesión
-      def setup_session_state():
-        if 'loaded_data' not in st.session_state:
-         st.session_state.loaded_data = load_data()
-
       # Llamar a función del estado de la sesión para obtener el dataframe (csv)
-      setup_session_state()
-
-      # Asignar el dataframe (csv) a la variable de la pagina actual
-      data_nuevo17 = st.session_state.loaded_data
-
+      setup_session_state(data_nuevo17)
+  
       #Mostrar el dataframe
       st.dataframe(data_nuevo17, width=1800, height=1200)
 
@@ -77,9 +74,6 @@ if selected == '2. Métricas de evaluación':
 
     # Título de la ventana
     st.title('Visualización de las métricas de evaluación')
-
-    # Llamar a función del estado de la sesión para obtener el dataframe (csv)
-    setup_session_state()
 
     # Asignar el dataframe (csv) a la variable de la pagina actual
     data_nuevo17 = st.session_state.loaded_data
