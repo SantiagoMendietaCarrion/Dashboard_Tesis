@@ -170,7 +170,7 @@ if selected == '2. Métricas de evaluación':
       i=0
       colors=['blue', 'red', 'orange', 'green']
 
-      fig, ax = plt.subplots(layout='constrained', figsize=(15,5))
+      fig, ax = plt.subplots(layout='constrained', figsize=(7,5))
 
       for attribute, measurement in class_metrics.items():
           offset = width * multiplier
