@@ -193,10 +193,12 @@ if selected == '2. Métricas de evaluación':
       col1, col2 = st.columns(2)
 
       # Mostrar los resultados
-      with col1:
-        st.dataframe(pcp_report_df2)
-      with col2:
-        st.pyplot(fig)
+      #with col1:
+      #  st.dataframe(pcp_report_df2)
+      #with col2:
+      #  st.pyplot(fig)
+      st.dataframe(pcp_report_df2)
+      st.pyplot(fig)
 
 # Ventana para la visualización de los resultados obtenidos
 if selected == "3. Resultados obtenidos":
