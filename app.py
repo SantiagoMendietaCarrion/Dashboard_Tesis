@@ -170,12 +170,12 @@ if selected == '2. Métricas de evaluación':
       i=0
       colors=['blue', 'red', 'orange', 'green']
 
-      fig, ax = plt.subplots(layout='constrained')
+      fig, ax = plt.subplots(layout='constrained', figsize=(15,5))
 
       for attribute, measurement in class_metrics.items():
           offset = width * multiplier
           rects = ax.bar(x + offset, measurement, width, label=attribute, color=colors[i])
-          ax.bar_label(rects, fmt=lambda x: x if x > 0 else '', padding=3, fontsize=5)
+          ax.bar_label(rects, fmt=lambda x: x if x > 0 else '', padding=3)
           multiplier+= 1
           if i==3:
             i=0
@@ -197,7 +197,9 @@ if selected == '2. Métricas de evaluación':
       #  st.dataframe(pcp_report_df2)
       #with col2:
       #  st.pyplot(fig)
+      st.header("Dataframe", divider=True)
       st.dataframe(pcp_report_df2)
+      st.header("Gráfico de barras", divider=True)
       st.pyplot(fig)
 
 # Ventana para la visualización de los resultados obtenidos
