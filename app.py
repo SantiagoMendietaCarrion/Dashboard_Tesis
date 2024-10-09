@@ -54,7 +54,8 @@ if selected == '1. Ingreso de archivos':
     st.title('Ingreso de archivos en formato csv')
 
     # Ingreso de archivos
-    uploaded_file = st.file_uploader("Escoja el archivo CSV")
+    st.session_state.loaded_data = st.file_uploader("Escoja el archivo CSV")
+    uploaded_file=st.session_state.loaded_data
 
     # Botón para visualizar el archivo CSV
 
@@ -62,15 +63,9 @@ if selected == '1. Ingreso de archivos':
 
       # Carga de Dataset
       data_nuevo17 = pd.read_csv(uploaded_file, sep=",")
-
-      #if 'loaded_data' not in st.session_state:
-      st.session_state.loaded_data = data_nuevo17
-
-      # Llamar a función del estado de la sesión para obtener el dataframe (csv)
-      #setup_session_state(data_nuevo17)
-  
+ 
       # Mostrar el dataframe
-      st.dataframe(st.session_state.loaded_data, width=1800, height=1200)
+      st.dataframe(data_nuevo17, width=1800, height=1200)
 
 # Ventana para la visualización de las métricas de evaluación
 if selected == '2. Métricas de evaluación':
