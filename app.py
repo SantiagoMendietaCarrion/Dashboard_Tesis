@@ -188,8 +188,15 @@ if selected == '2. Métricas de evaluación':
       ax.set_xticks(x + width, evaluation_metrics)
       ax.legend(loc='upper center', ncols=4)
       ax.set_ylim(0, 1.1)
-      #plt.show()
-      st.pyplot(fig)
+      
+      # Establecer las columnas para la visualización
+      col1, col2 = st.columns(2)
+
+      # Mostrar los resultados
+      with col1:
+        pcp_report_df2
+      with col2:
+        st.pyplot(fig)
 
 # Ventana para la visualización de los resultados obtenidos
 if selected == "3. Resultados obtenidos":
