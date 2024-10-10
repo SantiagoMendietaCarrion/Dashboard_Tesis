@@ -69,6 +69,10 @@ if selected == '1. Ingreso de archivos':
       data.rename(columns={'Customer ID':'CustomerID'}, inplace=True)
       st.dataframe(data, width=1800, height=1200)
 
+    # Espacio entre subtitulos
+    st.write("#")
+    st.write("#")
+
     # Dataset nuevo
     st.header("Dataset nuevo", divider=True)
 
