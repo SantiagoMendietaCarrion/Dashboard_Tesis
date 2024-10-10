@@ -14,6 +14,8 @@ from sklearn.metrics import average_precision_score
 import matplotlib.pyplot as plt
 import datetime
 from sklearn.cluster import KMeans 
+from sklearn.metrics import RocCurveDisplay
+from sklearn.metrics import PrecisionRecallDisplay
 
 # Establecer la configuración de la página
 st.set_page_config(page_title="Purchase prediction",
@@ -406,12 +408,22 @@ if selected == '2. Métricas de evaluación':
       ax.set_xticks(x + width, evaluation_metrics)
       ax.legend(loc='upper center', ncols=4)
       ax.set_ylim(0, 1.1)
-   
+
+      # Grafico de manera automática de la Curva ROC
+      roc_curve=RocCurveDisplay.from_estimator(best_pcp_model2, test_X2, test_Y2)
+
+      # Grafico de manera automática de la Curva Precision-Recall
+      precision_recall_curve=PrecisionRecallDisplay.from_estimator(best_pcp_model2, test_X2, test_Y2)
+
       # Mostrar las métricas de evaluación
       st.header("Dataframe", divider=True)
       st.dataframe(pcp_report_df2)
       st.header("Gráfico de barras", divider=True)
       st.pyplot(fig)
+      st.header("Curva ROC", divider=True)
+      st.pyplot(roc_curve)
+      st.header("Curva Precision-Recall", divider=True)
+      st.pyplot(precision_recall_curve)
 
 # Ventana para la visualización de los resultados obtenidos
 if selected == "3. Resultados obtenidos":
