@@ -61,12 +61,13 @@ if selected == '1. Ingreso de archivos':
     # Botón para visualizar el archivo CSV
     if st.button('Visualizar el archivo'):
 
-      # Carga del dataset inicial
-      st.session_state.loaded_df_inicial = pd.read_csv(st.session_state.loaded_csv, sep=",")
-      st.session_state.loaded_df_inicial.rename(columns={'Customer ID':'CustomerID'}, inplace=True)
-      data = st.session_state.loaded_df_inicial
- 
-      #Eliminación de valores nulos
+      # Obtener el dataset inicial
+      data = pd.read_csv(st.session_state.loaded_csv, sep=",")
+
+      # Cambiar el nombre de la columna Customer ID
+      data.rename(columns={'Customer ID':'CustomerID'}, inplace=True)
+       
+      # Eliminación de valores nulos
       data2=data.dropna() 
       data2.reset_index(drop=True, inplace=True)  
 
@@ -272,8 +273,12 @@ if selected == '1. Ingreso de archivos':
       data_nuevo17=data_nuevo16.copy()
       data_nuevo17.drop('Interval_Days', axis=1, inplace=True)
 
-      # Obtención del dataset nuevo
-      data_nuevo17 = st.session_state.loaded_df_nuevo
+      # Asignación de las variables obtenidas a las variables st.session_state
+      st.session_state.data = data
+      st.session_state.data9 = data9
+      st.session_state.data9_part1 = data9_part1
+      st.session_state.data9_part2 = data9_part2
+      st.session_state.data9_nuevo17 = data_nuevo17
 
       # Mostrar los datasets
       st.header("Dataset inicial", divider=True)
@@ -291,7 +296,7 @@ if selected == '2. Métricas de evaluación':
     if st.button('Calcular las métricas de evaluación'):
     
       # Asignar el dataframe (csv) a la variable de la pagina actual
-      data_nuevo17 = st.session_state.loaded_df
+      data_nuevo17 = st.session_state.data_nuevo17
 
       # Selección de las mejores variables mediante SelectKBest Escenario 2
       X=data_nuevo17.drop(['Purchase'], axis=1)
