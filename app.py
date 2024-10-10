@@ -59,7 +59,7 @@ if selected == '1. Ingreso de archivos':
     st.session_state.loaded_csv = st.file_uploader("Escoja el archivo CSV")
 
     # Botón para visualizar el archivo CSV
-    if st.button('Visualizar el archivo'):
+    if st.button('Visualizar los datasets'):
 
       # Obtener el dataset inicial
       data = pd.read_csv(st.session_state.loaded_csv, sep=",")
@@ -278,7 +278,7 @@ if selected == '1. Ingreso de archivos':
       st.session_state.data9 = data9
       st.session_state.data9_part1 = data9_part1
       st.session_state.data9_part2 = data9_part2
-      st.session_state.data9_nuevo17 = data_nuevo17
+      st.session_state.data_nuevo17 = data_nuevo17
 
       # Mostrar los datasets
       st.header("Dataset inicial", divider=True)
