@@ -421,9 +421,9 @@ if selected == '2. Métricas de evaluación':
       st.header("Gráfico de barras", divider=True)
       st.pyplot(fig)
       st.header("Curva ROC", divider=True)
-      st.pyplot(roc_curve)
+      st.pyplot(roc_curve.figure_)
       st.header("Curva Precision-Recall", divider=True)
-      st.pyplot(precision_recall_curve)
+      st.pyplot(precision_recall_curve.figure_)
 
 # Ventana para la visualización de los resultados obtenidos
 if selected == "3. Resultados obtenidos":
