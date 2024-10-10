@@ -390,40 +390,42 @@ if selected == '2. Métricas de evaluación':
       i=0
       colors=['blue', 'red', 'orange', 'green']
 
-      fig, ax = plt.subplots(layout='constrained', figsize=(15,5))
+      fig1, ax1 = plt.subplots(layout='constrained', figsize=(15,5))
 
       for attribute, measurement in class_metrics.items():
           offset = width * multiplier
-          rects = ax.bar(x + offset, measurement, width, label=attribute, color=colors[i])
-          ax.bar_label(rects, fmt=lambda x: x if x > 0 else '', padding=3)
+          rects = ax1.bar(x + offset, measurement, width, label=attribute, color=colors[i])
+          ax1.bar_label(rects, fmt=lambda x: x if x > 0 else '', padding=3)
           multiplier+= 1
           if i==3:
             i=0
           else:
             i+=1
       # Add some text for labels, title and custom x-axis tick labels, etc.
-      ax.set_xlabel('Metrics')
-      ax.set_ylabel('Values (0 a 1)')
-      ax.set_title('Evaluation metrics Perceptron Model-Escenario 2-Sin balanceo')
-      ax.set_xticks(x + width, evaluation_metrics)
-      ax.legend(loc='upper center', ncols=4)
-      ax.set_ylim(0, 1.1)
+      ax1.set_xlabel('Metrics')
+      ax1.set_ylabel('Values (0 a 1)')
+      ax1.set_title('Evaluation metrics Perceptron Model-Escenario 2-Sin balanceo')
+      ax1.set_xticks(x + width, evaluation_metrics)
+      ax1.legend(loc='upper center', ncols=4)
+      ax1.set_ylim(0, 1.1)
 
       # Grafico de manera automática de la Curva ROC
-      roc_curve=RocCurveDisplay.from_estimator(best_pcp_model2, test_X2, test_Y2)
-
+      fig2, ax2 = plt.subplots(layout='constrained', figsize=(5,5))
+      pcp_roc_curve=RocCurveDisplay.from_estimator(best_pcp_model2, test_X2, test_Y2, ax=ax2)
+       
       # Grafico de manera automática de la Curva Precision-Recall
-      precision_recall_curve=PrecisionRecallDisplay.from_estimator(best_pcp_model2, test_X2, test_Y2)
+      fig3, ax3 = plt.subplots(layout='constrained', figsize=(5,5))
+      pcp_precision_recall_curve2=PrecisionRecallDisplay.from_estimator(best_pcp_model2, test_X2, test_Y2, ax=ax3)
 
       # Mostrar las métricas de evaluación
       st.header("Dataframe", divider=True)
       st.dataframe(pcp_report_df2)
       st.header("Gráfico de barras", divider=True)
-      st.pyplot(fig)
+      st.pyplot(fig1)
       st.header("Curva ROC", divider=True)
-      st.pyplot(roc_curve.figure_, use_container_width=False)
+      st.pyplot(fig2)
       st.header("Curva Precision-Recall", divider=True)
-      st.pyplot(precision_recall_curve.figure_, use_container_width=False)
+      st.pyplot(fig3)
 
 # Ventana para la visualización de los resultados obtenidos
 if selected == "3. Resultados obtenidos":
