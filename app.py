@@ -53,19 +53,27 @@ with st.sidebar:
 if selected == '1. Ingreso de archivos':
 
     # Título de la ventana
-    st.title('Ingreso de archivos en formato csv')
+    st.title('Ingreso del archivo en formato csv')
 
-    # Carga del dataset
+    # Dataset inicial
+    st.header("Dataset inicial", divider=True)
     st.session_state.loaded_csv = st.file_uploader("Escoja el archivo CSV")
 
-    # Botón para visualizar el archivo CSV
-    if st.button('Visualizar los datasets'):
+    # Botón para visualizar el dataset inicial
+    if st.button('Visualizar el dataset'):
 
       # Obtener el dataset inicial
       data = pd.read_csv(st.session_state.loaded_csv, sep=",")
 
       # Cambiar el nombre de la columna Customer ID
       data.rename(columns={'Customer ID':'CustomerID'}, inplace=True)
+      st.dataframe(data, width=1800, height=1200)
+
+    # Dataset nuevo
+    st.header("Dataset nuevo", divider=True)
+
+    # Botón para visualizar el dataset nuevo
+    if st.button('Transformar el dataset inicial'):
        
       # Eliminación de valores nulos
       data2=data.dropna() 
@@ -281,10 +289,10 @@ if selected == '1. Ingreso de archivos':
       st.session_state.data_nuevo17 = data_nuevo17
 
       # Mostrar los datasets
-      st.header("Dataset inicial", divider=True)
-      st.dataframe(data, width=1800, height=1200)
-      st.header("Dataset nuevo", divider=True)
-      st.dataframe(data_nuevo17, width=1800, height=1200)
+      #st.header("Dataset inicial", divider=True)
+      #st.dataframe(data, width=1800, height=1200)
+      #st.header("Dataset nuevo", divider=True)
+      #st.dataframe(data_nuevo17, width=1800, height=1200)
 
 # Ventana para la visualización de las métricas de evaluación
 if selected == '2. Métricas de evaluación':
