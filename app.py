@@ -414,7 +414,7 @@ if selected == '2. Métricas de evaluación':
       #pcp_roc_curve=RocCurveDisplay.from_estimator(best_pcp_model2, test_X2, test_Y2, ax=ax2)
        
       # Obtener Curva ROC
-      fig2, ax2 = plt.subplots(layout='constrained', figsize=(5,5))
+      fig2, ax2 = plt.subplots(layout='constrained', figsize=(2,2))
       fpr, tpr, thresholds = roc_curve(test_Y2, pcp_probabilities2)
       pcp_auc_score2=round(roc_auc_score(test_Y2, pcp_probabilities2),2)
       pcp_auc_score2_label="Perceptron (AUC= "+str(pcp_auc_score2)+")"
@@ -432,7 +432,7 @@ if selected == '2. Métricas de evaluación':
       #pcp_precision_recall_curve2=PrecisionRecallDisplay.from_estimator(best_pcp_model2, test_X2, test_Y2, ax=ax3)
 
       # Obtener Curva Precision-Recall
-      fig3, ax3 = plt.subplots(layout='constrained', figsize=(5,5))
+      fig3, ax3 = plt.subplots(layout='constrained', figsize=(2,2))
       precision, recall, thresholds = precision_recall_curve(test_Y2, pcp_probabilities2)
       pcp_precision_score2=round(average_precision_score(test_Y2, pcp_probabilities2),2)
       pcp_precision_score2_label="Perceptron (AP= "+str(pcp_precision_score2)+")"
