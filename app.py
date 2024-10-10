@@ -63,6 +63,7 @@ if selected == '1. Ingreso de archivos':
 
       # Carga del dataset inicial
       st.session_state.loaded_df_inicial = pd.read_csv(st.session_state.loaded_csv, sep=",")
+      st.session_state.loaded_df_inicial.rename(columns={'Customer ID':'CustomerID'}, inplace=True)
       data = st.session_state.loaded_df_inicial
  
       #Eliminación de valores nulos
