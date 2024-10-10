@@ -9,8 +9,8 @@ from sklearn.feature_selection import SelectKBest
 from sklearn.preprocessing import StandardScaler      
 from sklearn.model_selection import train_test_split   
 from sklearn.metrics import confusion_matrix, classification_report 
-from sklearn.metrics import accuracy_score, roc_auc_score, roc_curve
-from sklearn.metrics import average_precision_score
+from sklearn.metrics import roc_auc_score, roc_curve
+from sklearn.metrics import average_precision_score, precision_recall_curve
 import matplotlib.pyplot as plt
 import datetime
 from sklearn.cluster import KMeans 
@@ -410,12 +410,39 @@ if selected == '2. Métricas de evaluación':
       ax1.set_ylim(0, 1.1)
 
       # Grafico de manera automática de la Curva ROC
-      fig2, ax2 = plt.subplots(layout='constrained', figsize=(5,5))
-      pcp_roc_curve=RocCurveDisplay.from_estimator(best_pcp_model2, test_X2, test_Y2, ax=ax2)
+      #fig2, ax2 = plt.subplots(layout='constrained', figsize=(5,5))
+      #pcp_roc_curve=RocCurveDisplay.from_estimator(best_pcp_model2, test_X2, test_Y2, ax=ax2)
        
+      # Obtener Curva ROC
+      fig2, ax2 = plt.subplots(layout='constrained', figsize=(5,5))
+      fpr, tpr, thresholds = roc_curve(test_Y2, pcp_probabilities2)
+      pcp_auc_score2=round(roc_auc_score(test_Y2, pcp_probabilities2),2)
+      pcp_auc_score2_label="Perceptron (AUC= "+str(pcp_auc_score2)+")"
+      ax2.plot(fpr, tpr, label=pcp_auc_score2_label)
+      ax2.set_xlabel('False Positive Rate (Positive label: 1)')
+      ax2.set_ylabel('True Positive Rate (Positive label: 1)')
+      ax2.set_title('ROC Curve Perceptron Model-Escenario 2-Sin balanceo')
+      ax2.legend(loc='lower right', ncols=1)
+      ax2.set_xlim(-0.01, 1.01)
+      ax2.set_ylim(-0.01, 1.01)
+
+
       # Grafico de manera automática de la Curva Precision-Recall
+      #fig3, ax3 = plt.subplots(layout='constrained', figsize=(5,5))
+      #pcp_precision_recall_curve2=PrecisionRecallDisplay.from_estimator(best_pcp_model2, test_X2, test_Y2, ax=ax3)
+
+      # Obtener Curva Precision-Recall
       fig3, ax3 = plt.subplots(layout='constrained', figsize=(5,5))
-      pcp_precision_recall_curve2=PrecisionRecallDisplay.from_estimator(best_pcp_model2, test_X2, test_Y2, ax=ax3)
+      precision, recall, thresholds = precision_recall_curve(test_Y2, pcp_probabilities2)
+      pcp_precision_score2=round(average_precision_score(test_Y2, pcp_probabilities2),2)
+      pcp_precision_score2_label="Perceptron (AP= "+str(pcp_precision_score2)+")"
+      ax3.plot(recall, precision, label=pcp_precision_score2_label)
+      ax3.set_xlabel('Recall (Positive label: 1)')
+      ax3.set_ylabel('Precision (Positive label: 1)')
+      ax3.set_title('Precision-Recall Curve Perceptron Model-Escenario 2-Sin balanceo')
+      ax3.legend(loc='lower left', ncols=1)
+      ax3.set_xlim(-0.01, 1.01)
+      ax3.set_ylim(-0.01, 1.01)
 
       # Mostrar las métricas de evaluación
       st.header("Dataframe", divider=True)
