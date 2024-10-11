@@ -16,6 +16,7 @@ import datetime
 from sklearn.cluster import KMeans 
 from sklearn.metrics import RocCurveDisplay
 from sklearn.metrics import PrecisionRecallDisplay
+from PIL import Image
 
 # Establecer la configuración de la página
 st.set_page_config(page_title="Purchase prediction",
@@ -421,6 +422,8 @@ if selected == '2. Métricas de evaluación':
       ax2.legend(loc='lower right', ncols=1)
       ax2.set_xlim(-0.01, 1.01)
       ax2.set_ylim(-0.01, 1.01)
+      fig2.savefig("pcp_roc_curve2.png")
+      pcp_roc_curve2 = Image.open('pcp_roc_curve2.png')
 
       # Obtener Curva Precision-Recall
       fig3, ax3 = plt.subplots(layout='constrained', figsize=(5,5))
@@ -434,10 +437,12 @@ if selected == '2. Métricas de evaluación':
       ax3.legend(loc='lower left', ncols=1)
       ax3.set_xlim(-0.01, 1.01)
       ax3.set_ylim(-0.01, 1.01)
+      fig3.savefig("pcp_precision_recall_curve2.png")
+      pcp_precision_recall_curve2 = Image.open('pcp_precision_recall_curve2.png')
 
       # Establecer columnas para los graficos de Curva ROC y Curva Precision-Recall
-      col1, col2 = st.columns(2)
-      col3, col4 = st.columns(2)
+      #col1, col2 = st.columns(2)
+      #col3, col4 = st.columns(2)
 
       # Mostrar las métricas de evaluación
       st.header("Dataframe", divider=True)
@@ -445,11 +450,9 @@ if selected == '2. Métricas de evaluación':
       st.header("Gráfico de barras", divider=True)
       st.pyplot(fig1)
       st.header("Curva ROC", divider=True)
-      with col1:
-        st.pyplot(fig2)
+      st.image(pcp_roc_curve2)
       st.header("Curva Precision-Recall", divider=True)
-      with col3:
-        st.pyplot(fig3)
+      st.image(pcp_precision_recall_curve2)
 
 # Ventana para la visualización de los resultados obtenidos
 if selected == "3. Resultados obtenidos":
