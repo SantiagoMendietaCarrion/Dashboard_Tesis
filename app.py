@@ -78,9 +78,9 @@ if selected == '1. Ingreso de archivos':
   if 'data' in ss and 'data_nuevo17' in ss:
     # Mostrar los datasets
     st.header("Dataset inicial", divider=True)
-    st.dataframe(data, width=1800, height=1200)
+    st.dataframe(ss.data, width=1800, height=1200)
     st.header("Dataset nuevo", divider=True)
-    st.dataframe(data_nuevo17, width=1800, height=1200)      
+    st.dataframe(ss.data_nuevo17, width=1800, height=1200)      
 
   # Botón para visualizar el dataset inicial y el nuevo
   elif st.button('Visualizar el dataset', on_click=click_button):
