@@ -375,6 +375,10 @@ if selected == '2. Métricas de evaluación':
       pcp_report_df2['class 1']=pcp_report_df2['class 1'].apply(lambda x: round(float(x),2))
       pcp_report_df2['macro avg']=pcp_report_df2['macro avg'].apply(lambda x: round(float(x),2))
       pcp_report_df2['weighted avg']=pcp_report_df2['weighted avg'].apply(lambda x: round(float(x),2))
+
+      # Obtener copia del dataframe pcp_report_df2 para reemplazar los ceros con NaN
+      pcp_report_df2_mod=pcp_report_df2.copy()
+      pcp_report_df2_mod.replace(0, np.nan, inplace=True)
  
       # Gráfico de barras agrupado: Precision, Recall, F1-Score. Accuracy, AUC-Score, Precision-Score
       evaluation_metrics = ("Precision", "Recall", "F1-Score", "Accuracy", "AUC-Score", "Precision-Score")
@@ -409,6 +413,8 @@ if selected == '2. Métricas de evaluación':
       ax1.set_xticks(x + width, evaluation_metrics)
       ax1.legend(loc='upper center', ncols=4)
       ax1.set_ylim(0, 1.1)
+      fig1.savefig('pcp_barplot_evaluation_metrics2.png')
+      pcp_barplot_evaluation_metrics2 = Image.open('pcp_barplot_evaluation_metrics2.png')
        
       # Obtener Curva ROC
       fig2, ax2 = plt.subplots(layout='constrained', figsize=(5,5))
@@ -422,7 +428,7 @@ if selected == '2. Métricas de evaluación':
       ax2.legend(loc='lower right', ncols=1)
       ax2.set_xlim(-0.01, 1.01)
       ax2.set_ylim(-0.01, 1.01)
-      fig2.savefig("pcp_roc_curve2.png")
+      fig2.savefig('pcp_roc_curve2.png')
       pcp_roc_curve2 = Image.open('pcp_roc_curve2.png')
 
       # Obtener Curva Precision-Recall
@@ -433,22 +439,18 @@ if selected == '2. Métricas de evaluación':
       ax3.plot(recall, precision, label=pcp_precision_score2_label)
       ax3.set_xlabel('Recall (Positive label: 1)')
       ax3.set_ylabel('Precision (Positive label: 1)')
-      ax3.set_title('Precision-Recall Curve Perceptron Model-Escenario 2-Sin balanceo')
+      ax3.set_title('P-R Curve Perceptron Model-Escenario 2-Sin balanceo')
       ax3.legend(loc='lower left', ncols=1)
       ax3.set_xlim(-0.01, 1.01)
       ax3.set_ylim(-0.01, 1.01)
-      fig3.savefig("pcp_precision_recall_curve2.png")
+      fig3.savefig('pcp_precision_recall_curve2.png')
       pcp_precision_recall_curve2 = Image.open('pcp_precision_recall_curve2.png')
-
-      # Establecer columnas para los graficos de Curva ROC y Curva Precision-Recall
-      #col1, col2 = st.columns(2)
-      #col3, col4 = st.columns(2)
 
       # Mostrar las métricas de evaluación
       st.header("Dataframe", divider=True)
-      st.dataframe(pcp_report_df2)
+      st.dataframe(pcp_report_df2_mod)
       st.header("Gráfico de barras", divider=True)
-      st.pyplot(fig1)
+      st.image(pcp_barplot_evaluation_metrics2)
       st.header("Curva ROC", divider=True)
       st.image(pcp_roc_curve2)
       st.header("Curva Precision-Recall", divider=True)
