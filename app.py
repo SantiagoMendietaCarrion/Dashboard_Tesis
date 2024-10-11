@@ -17,6 +17,7 @@ from sklearn.cluster import KMeans
 from sklearn.metrics import RocCurveDisplay
 from sklearn.metrics import PrecisionRecallDisplay
 from PIL import Image
+from streamlit import session_state as ss
 
 # Establecer la configuración de la página
 st.set_page_config(page_title="Purchase prediction",
@@ -59,13 +60,15 @@ if selected == '1. Ingreso de archivos':
   st.title('Ingreso del archivo/dataset en formato csv')
 
   # Carga del archivo csv
-  st.session_state.loaded_csv = st.file_uploader("Escoja el archivo CSV")
+  if "loaded_csv" not in ss:
+    ss.loaded_csv = ""
+  ss.loaded_csv = st.file_uploader("Escoja el archivo CSV")
 
   # Botón para visualizar el dataset inicial y el nuevo
   if st.button('Visualizar el dataset'):
 
     # Obtener el dataset inicial
-    data = pd.read_csv(st.session_state.loaded_csv, sep=",")
+    data = pd.read_csv(ss.loaded_csv, sep=",")
 
     # Cambiar el nombre de la columna Customer ID
     data.rename(columns={'Customer ID':'CustomerID'}, inplace=True)
@@ -276,12 +279,24 @@ if selected == '1. Ingreso de archivos':
     data_nuevo17=data_nuevo16.copy()
     data_nuevo17.drop('Interval_Days', axis=1, inplace=True)
 
+    # Inicializar las variables en st.session_state
+    if "data" not in ss:
+      ss.data = ""
+    if "data9" not in ss:
+      ss.data9 = ""
+    if "data9_part1" not in ss:
+      ss.data9_part1 = ""
+    if "data9_part2" not in ss:
+      ss.data9_part2 = ""
+    if "data_nuevo17" not in ss:
+      ss.data_nuevo17 = ""
+
     # Asignación de las variables obtenidas a las variables st.session_state
-    st.session_state.data = data
-    st.session_state.data9 = data9
-    st.session_state.data9_part1 = data9_part1
-    st.session_state.data9_part2 = data9_part2
-    st.session_state.data_nuevo17 = data_nuevo17
+    ss.data = data
+    ss.data9 = data9
+    ss.data9_part1 = data9_part1
+    ss.data9_part2 = data9_part2
+    ss.data_nuevo17 = data_nuevo17
 
     # Mostrar los datasets
     st.header("Dataset inicial", divider=True)
