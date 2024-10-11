@@ -437,20 +437,19 @@ if selected == '2. Métricas de evaluación':
 
       # Establecer columnas para los graficos de Curva ROC y Curva Precision-Recall
       col1, col2 = st.columns(2)
+      col3, col4 = st.columns(2)
 
       # Mostrar las métricas de evaluación
       st.header("Dataframe", divider=True)
       st.dataframe(pcp_report_df2)
       st.header("Gráfico de barras", divider=True)
       st.pyplot(fig1)
-      st.header("Curva ROC y Curva Precision-Recall", divider=True)
+      st.header("Curva ROC", divider=True)
       with col1:
         st.pyplot(fig2)
-      with col2:
+      st.header("Curva Precision-Recall", divider=True)
+      with col3:
         st.pyplot(fig3)
-      #st.header("Curva Precision-Recall", divider=True)
-      #with col2:
-      #  st.pyplot(fig3)
 
 # Ventana para la visualización de los resultados obtenidos
 if selected == "3. Resultados obtenidos":
