@@ -59,13 +59,23 @@ if selected == '1. Ingreso de archivos':
   # Título de la ventana
   st.title('Ingreso del archivo/dataset en formato csv')
 
-  # Carga del archivo csv
+  # Inicializar atributo en st.session_state para el boton de visualizar el dataset
+  if 'clicked' not in ss:
+      ss.clicked = False
+
+  # Funcion cuando se presiona el boton de visualizar el dataset
+  def click_button():
+      ss.clicked = True
+
+  # Inicializar atributo en st.session_state para guardar el archivo del dataset
   if "loaded_csv" not in ss:
     ss.loaded_csv = ""
+  
+  # Carga del archivo csv
   ss.loaded_csv = st.file_uploader("Escoja el archivo CSV")
 
   # Botón para visualizar el dataset inicial y el nuevo
-  if st.button('Visualizar el dataset'):
+  if st.button('Visualizar el dataset', on_click=click_button):
 
     # Obtener el dataset inicial
     data = pd.read_csv(ss.loaded_csv, sep=",")
