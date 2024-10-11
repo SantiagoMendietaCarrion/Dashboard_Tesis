@@ -408,13 +408,9 @@ if selected == '2. Métricas de evaluación':
       ax1.set_xticks(x + width, evaluation_metrics)
       ax1.legend(loc='upper center', ncols=4)
       ax1.set_ylim(0, 1.1)
-
-      # Grafico de manera automática de la Curva ROC
-      #fig2, ax2 = plt.subplots(layout='constrained', figsize=(5,5))
-      #pcp_roc_curve=RocCurveDisplay.from_estimator(best_pcp_model2, test_X2, test_Y2, ax=ax2)
        
       # Obtener Curva ROC
-      fig2, ax2 = plt.subplots(layout='constrained', figsize=(4,4))
+      fig2, ax2 = plt.subplots(layout='constrained', figsize=(5,5))
       fpr, tpr, thresholds = roc_curve(test_Y2, pcp_probabilities2)
       pcp_auc_score2=round(roc_auc_score(test_Y2, pcp_probabilities2),2)
       pcp_auc_score2_label="Perceptron (AUC= "+str(pcp_auc_score2)+")"
@@ -426,12 +422,8 @@ if selected == '2. Métricas de evaluación':
       ax2.set_xlim(-0.01, 1.01)
       ax2.set_ylim(-0.01, 1.01)
 
-      # Grafico de manera automática de la Curva Precision-Recall
-      #fig3, ax3 = plt.subplots(layout='constrained', figsize=(5,5))
-      #pcp_precision_recall_curve2=PrecisionRecallDisplay.from_estimator(best_pcp_model2, test_X2, test_Y2, ax=ax3)
-
       # Obtener Curva Precision-Recall
-      fig3, ax3 = plt.subplots(layout='constrained', figsize=(4,4))
+      fig3, ax3 = plt.subplots(layout='constrained', figsize=(5,5))
       precision, recall, thresholds = precision_recall_curve(test_Y2, pcp_probabilities2)
       pcp_precision_score2=round(average_precision_score(test_Y2, pcp_probabilities2),2)
       pcp_precision_score2_label="Perceptron (AP= "+str(pcp_precision_score2)+")"
@@ -443,15 +435,22 @@ if selected == '2. Métricas de evaluación':
       ax3.set_xlim(-0.01, 1.01)
       ax3.set_ylim(-0.01, 1.01)
 
+      # Establecer columnas para los graficos de Curva ROC y Curva Precision-Recall
+      col1, col2 = st.columns(2)
+
       # Mostrar las métricas de evaluación
       st.header("Dataframe", divider=True)
       st.dataframe(pcp_report_df2)
       st.header("Gráfico de barras", divider=True)
       st.pyplot(fig1)
-      st.header("Curva ROC", divider=True)
-      st.pyplot(fig2)
-      st.header("Curva Precision-Recall", divider=True)
-      st.pyplot(fig3)
+      st.header("Curva ROC y Curva Precision-Recall", divider=True)
+      with col1:
+        st.pyplot(fig2)
+      with col2:
+        st.pyplot(fig3)
+      #st.header("Curva Precision-Recall", divider=True)
+      #with col2:
+      #  st.pyplot(fig3)
 
 # Ventana para la visualización de los resultados obtenidos
 if selected == "3. Resultados obtenidos":
