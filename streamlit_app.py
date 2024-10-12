@@ -55,27 +55,20 @@ if selected == '1. Ingreso de archivos':
   # Carga del archivo csv
   ss.loaded_csv = st.file_uploader("Escoja el archivo CSV")
 
-  # Condicional para visualizar los datasets en caso de que ya se hayan creado
-  #if 'data' in ss and 'data_nuevo17' in ss:
-  #  # Mostrar los datasets
-  #  st.header("Dataset inicial", divider=True)
-  #  st.dataframe(ss.data, width=1800, height=1200)
-  #  st.header("Dataset nuevo", divider=True)
-  #  st.dataframe(ss.data_nuevo17, width=1800, height=1200)  
-
   # Inicializar atributo en st.session_state para guardar el estado del botón de visualizar el dataset
-  if 'clicked' not in ss:
-    ss.clicked = False
+  #if 'clicked' not in ss:
+  #  ss.clicked = False
 
   # Función para cambiar el estado del botón de visualizar el dataset
-  def click_button():
-    ss.clicked = True
+  #def click_button():
+  #  ss.clicked = True
 
   # Botón de visualizar el dataset
-  st.button('Visualizar el dataset', on_click=click_button)    
+  #st.button('Visualizar el dataset', on_click=click_button)    
 
   # Botón para visualizar el dataset inicial y el nuevo
-  if ss.clicked and ss.loaded_csv:
+  #if ss.clicked and ss.loaded_csv:
+  if st.button('Visualizar el dataset'):
     # Obtener el dataset inicial
     data = pd.read_csv(ss.loaded_csv, sep=",")
 
