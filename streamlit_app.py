@@ -521,7 +521,7 @@ if selected == "3. Resultados obtenidos":
       cambio_clientes_ultimo_trimestre=round(((clientes_3_meses-clientes_6_meses)/clientes_6_meses)*100, 2)             # Cambio del número de clientes que han comprado en los últimos 3 meses
 
       # Establecer las columnas para la visualización
-      c1, c2, c3, c4 = st.columns(3)
+      c1, c2, c3, c4 = st.columns(4)
 
       # Encabezado del dashboard
       st.header("Dashboard Predicción de compra", divider=True)
