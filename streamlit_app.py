@@ -316,7 +316,7 @@ if selected == '2. Métricas de evaluación':
     if st.button('Calcular las métricas de evaluación'):
     
       # Asignar el dataframe (csv) a la variable de la pagina actual
-      data_nuevo17 = st.session_state.data_nuevo17
+      data_nuevo17 = ss.data_nuevo17
 
       # Selección de las mejores variables mediante SelectKBest Escenario 2
       X=data_nuevo17.drop(['Purchase'], axis=1)
@@ -478,3 +478,62 @@ if selected == "3. Resultados obtenidos":
 
     # page title
     st.title("Visualización de los resultados obtenidos")
+
+    # Asignar el valor a las variables generadas anteriormente
+    data9_part1 = ss.data9_part1
+    data9_part2 = ss.data9_part2 
+    data_nuevo17 = ss.data_nuevo17 
+
+    # Fecha máxima del dataset inicial parte 1
+    data9_part1_fecha_maxima=data9_part1['InvoiceDate'].max()
+
+    # Fecha mínima del dataset inicial parte 1 hace 3 meses
+    data9_part1_fecha_minima_3meses=data9_part1['InvoiceDate'].max()-3*pd.Timedelta(days=30)
+
+    # Fecha mínima del dataset inicial parte 1 hace 6 meses
+    data9_part1_fecha_minima_6meses=data9_part1_fecha_minima_3meses-3*pd.Timedelta(days=30)
+
+    # Dataset inicial parte 1 (ultimos 3 meses)
+    data9_part1_3meses=data9_part1[(data9_part1['InvoiceDate'] >= data9_part1_fecha_minima_3meses) & (data9['InvoiceDate'] < data9_part1_fecha_maxima)].reset_index(drop=True)
+
+    # Dataset inicial parte 1 (ultimos 3 meses)
+    data9_part1_6meses=data9_part1[(data9_part1['InvoiceDate'] >= data9_part1_fecha_minima_6meses) & (data9['InvoiceDate'] < data9_part1_fecha_minima_3meses)].reset_index(drop=True)
+
+    # Resultados generales últimos 3 meses del dataset inicial parte 1
+    ventas_totales_3_meses=data9_part1_3meses['Revenue'].sum()  # Ventas totales últimos 3 meses
+    transacciones_totales_3_meses=len(data9_part1_3meses)       # Cantidad de transacciones (filas) últimos 3 meses
+    productos_vendidos_3_meses=len(data9_part1_3meses.groupby('Description'))  # Productos vendidos en los últimos 3 meses
+    clientes_3_meses=len(data9_part1_3meses.groupby('CustomerID'))              # Número de clientes que han comprado en los últimos 3 meses
+
+    # Resultados generales últimos 6 meses del dataset inicial parte 1
+    ventas_totales_6_meses=data9_part1_6meses['Revenue'].sum()  # Ventas totales últimos 6 meses
+    transacciones_totales_6_meses=len(data9_part1_6meses)       # Cantidad de transacciones (filas) últimos 6 meses
+    productos_vendidos_6_meses=len(data9_part1_6meses.groupby('Description'))  # Productos vendidos en los últimos 6 meses
+    clientes_6_meses=len(data9_part1_6meses.groupby('CustomerID'))              # Número de clientes que han comprado en los últimos 6 meses
+
+    # Resultados de cambio porcentual del último trimestre con respecto al anterior
+    cambio_ventas_ultimo_trimestre=round(((ventas_totales_3_meses-ventas_totales_6_meses)/ventas_totales_6_meses)*100, 2)  # Cambio de las ventas totales últimos 3 meses
+    cambio_transacciones_ultimo_trimestre=round(((transacciones_totales_3_meses-transacciones_totales_6_meses)/transacciones_totales_6_meses)*100, 2)  # Cambio de la cantidad de transacciones (filas) últimos 3 meses
+    cambio_productos_vendidos_ultimo_trimestre=round(((productos_vendidos_3_meses-productos_vendidos_6_meses)/productos_vendidos_6_meses)*100, 2)  # Cambio de productos vendidos en los últimos 3 meses
+    cambio_clientes_ultimo_trimestre=round(((clientes_3_meses-clientes_6_meses)/clientes_6_meses)*100, 2)             # Cambio del número de clientes que han comprado en los últimos 3 meses
+
+    # Establecer las columnas para la visualización
+    c1, c2, c3, c4 = st.columns(3)
+
+    # Impresion de los resultados generales
+    with c1:
+      st.metric(label="Ventas totales", value=ventas_totales_3_meses, delta=cambio_ventas_ultimo_trimestre)
+    with c2:
+      st.metric(label="Transacciones totales", value=transacciones_totales_3_meses, delta=cambio_transacciones_ultimo_trimestre)
+    with c3:
+      st.metric(label="Productos vendidos", value=productos_vendidos_3_meses, delta=cambio_productos_vendidos_ultimo_trimestre)
+    with c4:
+      st.metric(label="Clientes", value=clientes_3_meses, delta=cambio_clientes_ultimo_trimestre)
+  
+
+
+
+
+
+
+
