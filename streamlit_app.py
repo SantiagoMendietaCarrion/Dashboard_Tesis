@@ -75,7 +75,7 @@ if selected == '1. Ingreso de archivos':
   st.button('Visualizar el dataset', on_click=click_button)    
 
   # Botón para visualizar el dataset inicial y el nuevo
-  if ss.clicked:
+  if ss.clicked and ss.loaded_csv:
     # Obtener el dataset inicial
     data = pd.read_csv(ss.loaded_csv, sep=",")
 
@@ -311,7 +311,7 @@ if selected == '1. Ingreso de archivos':
     st.header("Dataset inicial", divider=True)
     st.dataframe(data, width=1800, height=1200)
     st.header("Dataset nuevo", divider=True)
-    st.dataframe(data_nuevo17, width=1800, height=1200)      
+    st.dataframe(data_nuevo17, width=1800, height=1200)     
               
 # Ventana para la visualización de las métricas de evaluación
 if selected == '2. Métricas de evaluación':
