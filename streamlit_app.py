@@ -809,6 +809,30 @@ if selected == "3. Resultados obtenidos":
     ax7.legend(loc='upper center', ncols=2)
     ax7.set_ylim(0, 140000)
 
+    #### Mejores productos últimos 3 meses #####   
+    # Dataframe mejores productos
+    data9_part1_mejores_productos=data9_part1_3meses[['Description', 'Quantity', 'Revenue']].groupby('Description').sum().sort_values(by='Quantity', ascending=False)
+    data9_part1_mejores_productos.reset_index(inplace=True)
+    data9_part1_total_revenue=data9_part1_mejores_productos['Revenue'].sum()
+    data9_part1_mejores_productos['Porcentaje']=data9_part1_mejores_productos['Revenue'].apply(lambda x: round(x/data9_part1_total_revenue*100,2))
+    data9_part1_mejores_productos=data9_part1_mejores_productos.sort_values(by='Porcentaje', ascending=False)
+
+    # CInco mejores productos en función de las venta totales de los últimos 3 meses
+    data9_part1_mejores_productos_head=data9_part1_mejores_productos[['Description','Porcentaje']].head(5)
+    data9_part1_mejores_productos_head2=data9_part1_mejores_productos_head.sort_values(by='Porcentaje', ascending=True)
+
+    # Gráfico de barras de los mejores productos 
+    fig5, ax5 = plt.subplots(layout='constrained', figsize=(10,5))
+    colores=['lightsteelblue', 'cornflowerblue', 'royalblue', 'mediumblue', 'darkblue']
+    x=data9_part1_mejores_productos_head2['Porcentaje']
+    y=data9_part1_mejores_productos_head2['Description']
+    ax5.barh(y=y,  width=x, color=colores)
+    ax5.bar_label(ax.containers[0], padding=3)
+    ax5.set_xlabel('Total sales (%)')
+    ax5.set_ylabel('Product names')
+    ax5.set_title('Products vs Total sales (%) Perceptron Model-Escenario 2-Sin balanceo')
+    ax5.set_xlim(0,2.25)
+
     ##### Dashboard #####
     # Encabezado del dashboard
     st.header("Dashboard Predicción de compra", divider=True)
@@ -877,8 +901,8 @@ if selected == "3. Resultados obtenidos":
     c1, c2, c3 = st.columns(spec=[1/3, 1/3, 1/3])
 
     # Impresion de los gráficos de la tercera fila
-    #with c1:
-    #  st.pyplot(fig2)
+    with c1:
+      st.pyplot(fig5)
     with c2:
       st.pyplot(fig6)
     with c3:
