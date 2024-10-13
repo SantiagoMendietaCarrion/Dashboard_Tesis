@@ -840,18 +840,18 @@ if selected == "3. Resultados obtenidos":
 
     ## Segunda fila ##
     # Establecer las columnas para los subencabezados de la segunda fila
-    c1, c2, c3 = st.columns(spec=[0.4, 0.3, 0.3])
+    c1, c2, c3 = st.columns(spec=[1/3, 1/3, 1/3])
 
     # Impresión de los subencabezados de segunda fila
     with c1:
-      st.subheader("Recencia, Frecuencia y Valor monetario (Promedios)", divider=True)
+      st.subheader("RFM (Promedios)", divider=True)
     with c2:
       st.subheader("Score de los clientes (conteo, %)", divider=True)
     with c3:
       st.subheader("Score vs Frecuencia (promedio)", divider=True)
 
     # Establecer las columnas para la visualización de los gráficos de la segunda fila
-    c1, c2, c3 = st.columns(spec=[0.4, 0.3, 0.3])
+    c1, c2, c3 = st.columns(spec=[1/3, 1/3, 1/3])
 
     # Impresion de los gráficos de la segunda fila
     with c1:
