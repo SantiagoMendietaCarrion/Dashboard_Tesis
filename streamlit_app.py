@@ -595,6 +595,15 @@ if selected == "3. Resultados obtenidos":
     # Encabezado del dashboard
     st.header("Dashboard Predicción de compra", divider=True)
 
+    # Establecer las columnas para los subencabezados
+    c1, c2 = st.columns(spec=[0.6, 0.4])
+
+    # Subencabezados
+    with c1:
+      st.subheader("Ventas últimos 3 meses", divider=True)
+    with c2:
+      st.subheader("Gráfico: Fecha vs Ventas totales", divider=True)
+
     # Establecer las columnas para la visualización
     c1, c2, c3, c4, c5 = st.columns(spec=[0.15, 0.15, 0.15, 0.15, 0.4])
 
