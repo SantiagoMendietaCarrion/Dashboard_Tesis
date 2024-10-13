@@ -463,6 +463,13 @@ if selected == '2. Métricas de evaluación':
       fig3.savefig('pcp_precision_recall_curve2.png')
       pcp_precision_recall_curve2 = Image.open('pcp_precision_recall_curve2.png')
 
+      # Inicializar las variables en st.session_state
+      if "pcp_df2" not in ss:
+        ss.pcp_df2 = ""
+
+      # Asignación de las variables obtenidas a las variables st.session_state
+      ss.pcp_df2 = pcp_df2
+
       # Mostrar las métricas de evaluación
       st.header("Dataframe", divider=True)
       st.dataframe(pcp_report_df2_mod)
@@ -486,7 +493,36 @@ if selected == "3. Resultados obtenidos":
     data9_part1 = ss.data9_part1
     data9_part2 = ss.data9_part2 
     data_nuevo17 = ss.data_nuevo17 
+    pcp_df2 = ss.pcp_df2
 
+    #### Predicciones del algoritmo Dataset inicial #####
+    # Dataframe de las predicciones (purchase predicted 0)
+    pcp_df2_preditecd0=pcp_df2.loc[pcp_df2['Valor predecido']==0, pcp_df2.columns]
+
+    # Dataframe de las predicciones (purchase predicted 1)
+    pcp_df2_preditecd1=pcp_df2.loc[pcp_df2['Valor predecido']==1, pcp_df2.columns]
+
+    # Consumidores que se predijeron que no van a realizar una compra en los siguientes 90 días
+    purchase_predicted0=data_nuevo17.loc[pcp_df2_preditecd0.index, data_nuevo17.columns]
+
+    # Consumidores que se predijeron que si van a realizar una compra en los siguientes 90 días
+    purchase_predicted1=data_nuevo17.loc[pcp_df2_preditecd1.index, data_nuevo17.columns]
+
+    #### Predicciones del algoritmo Dataset nuevo #####
+    # Copia del dataset inicial
+    data9_modificado=data9.copy()
+
+    # Añadir la columna Invoice_Date_Year_Month al dataframe data9_modificado
+    data9_modificado['InvoiceDate_Year_Month']=data9_modificado['InvoiceDate'].apply(lambda x: x.strftime("%Y-%m"))
+    data9_modificado['InvoiceDate_Year_Month']=data9_modificado['InvoiceDate_Year_Month'].apply(lambda x: datetime.datetime.strptime(x, '%Y-%m'))
+
+    # Dataset inicial con los consumidores que se predijeron que no comprarian en los siguientes 90 días
+    data9_purchase_predicted0=data9_modificado[data9_modificado['CustomerID'].isin(purchase_predicted0['CustomerID'])]
+
+    # Dataset inicial con los consumidores que se predijeron que si comprarian en los siguientes 90 días
+    data9_purchase_predicted1=data9_modificado[data9_modificado['CustomerID'].isin(purchase_predicted1['CustomerID'])]
+
+    #### Resultafos generales #####   
     # Fecha máxima del dataset inicial parte 1
     data9_part1_fecha_maxima=data9_part1['InvoiceDate'].max()
 
@@ -520,11 +556,47 @@ if selected == "3. Resultados obtenidos":
     cambio_productos_vendidos_ultimo_trimestre=round(((productos_vendidos_3_meses-productos_vendidos_6_meses)/productos_vendidos_6_meses)*100, 2)  # Cambio de productos vendidos en los últimos 3 meses
     cambio_clientes_ultimo_trimestre=round(((clientes_3_meses-clientes_6_meses)/clientes_6_meses)*100, 2)             # Cambio del número de clientes que han comprado en los últimos 3 meses
 
+    #### Grafico Date vs monetary_value (sum) #####  
+    # Dataframe Date vs Monetary_Value (sum) de los consumidores que se predijeron que no comprarian en los siguientes 90 días
+    monetary_value_sum0=pd.DataFrame(data9_purchase_predicted0['Revenue'].groupby(data9_purchase_predicted0['InvoiceDate_Year_Month']).sum())
+    monetary_value_sum0.reset_index(inplace=True)
+    monetary_value_sum0.columns=['Date', 'Monetary_Value']
+    monetary_value_sum0['Monetary_Value']=monetary_value_sum0['Monetary_Value'].apply(lambda x: int(round(x,0)))
+    monetary_value_sum0.sort_values(by='Date', inplace=True)
+    monetary_value_sum0['Date']=monetary_value_sum0['Date'].apply(lambda x: x.strftime("%Y-%m"))
+
+    # Dataframe Date vs Monetary_Value (sum) de los consumidores que se predijeron que si comprarian en los siguientes 90 días
+    monetary_value_sum1=pd.DataFrame(data9_purchase_predicted1['Revenue'].groupby(data9_purchase_predicted1['InvoiceDate_Year_Month']).sum())
+    monetary_value_sum1.reset_index(inplace=True)
+    monetary_value_sum1.columns=['Date', 'Monetary_Value']
+    monetary_value_sum1['Monetary_Value']=monetary_value_sum1['Monetary_Value'].apply(lambda x: int(round(x,0)))
+    monetary_value_sum1.sort_values(by='Date', inplace=True)
+    monetary_value_sum1['Date']=monetary_value_sum1['Date'].apply(lambda x: x.strftime("%Y-%m"))
+
+    # Dataframe Date vs Monetary_Value (sum) (purchase_predicted0 y purchase_predicted1)
+    monetary_value_sum=monetary_value_sum0.merge(monetary_value_sum1, on='Date', how='left')
+    monetary_value_sum.columns=['Date', 'Monetary_Value_0', 'Monetary_Value_1']
+    monetary_value_sum['Date_String']=monetary_value_sum['Date'].apply(lambda x: str(x)[2:7])
+    monetary_value_sum = monetary_value_sum.iloc[:, [0, 3, 1, 2]]
+
+    # Gráfico: Date vs Monetary Value (Ventas totales)
+    fig1, ax1 = plt.subplots(layout='constrained', figsize=(17,6))
+    x=monetary_value_sum['Date_String']
+    y1=monetary_value_sum['Monetary_Value_0']
+    y2=monetary_value_sum['Monetary_Value_1']
+    ax1.plot(x, y1, label = "Predicted_Purchase_0", color='blue')
+    ax1.plot(x, y2, label = "Predicted_Purchase_1", color='red')
+    ax1.set_xlabel('Date (Year-Month)')
+    ax1.set_ylabel('Monetary_Value (sum)')
+    ax1.set_title('Date vs Monetary_Value (sum) Perceptron Model-Escenario 2-Sin balanceo')
+    ax1.legend(loc='upper center', ncols=2)
+    ax1.set_ylim(0, 200000)
+
     # Encabezado del dashboard
     st.header("Dashboard Predicción de compra", divider=True)
 
     # Establecer las columnas para la visualización
-    c1, c2, c3, c4 = st.columns(4)
+    c1, c2, c3, c4, c5 = st.columns(spec=[0.15, 0.15, 0.15, 0.15, 0.4])
 
     # Impresion de los resultados generales
     with c1:
@@ -535,7 +607,8 @@ if selected == "3. Resultados obtenidos":
       st.metric(label="Productos vendidos", value=productos_vendidos_3_meses, delta=cambio_productos_vendidos_ultimo_trimestre)
     with c4:
       st.metric(label="Clientes", value=clientes_3_meses, delta=cambio_clientes_ultimo_trimestre)
-
+    with c5:
+      st.pyplot(fig1)
 
 
 
