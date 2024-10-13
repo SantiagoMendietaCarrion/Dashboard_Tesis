@@ -579,7 +579,7 @@ if selected == "3. Resultados obtenidos":
     monetary_value_sum['Date_String']=monetary_value_sum['Date'].apply(lambda x: str(x)[2:7])
     monetary_value_sum = monetary_value_sum.iloc[:, [0, 3, 1, 2]]
 
-    # Gráfico: Date vs Monetary Value (Ventas totales)
+    # Realizar el gráfico: Date vs Monetary Value (Ventas totales)
     fig1, ax1 = plt.subplots(layout='constrained', figsize=(17,6))
     x=monetary_value_sum['Date_String']
     y1=monetary_value_sum['Monetary_Value_0']
@@ -592,22 +592,241 @@ if selected == "3. Resultados obtenidos":
     ax1.legend(loc='upper center', ncols=2)
     ax1.set_ylim(0, 200000)
 
+    #### Gráficos de Recency, Frequency y Monetary_Value (mean values) #####  
+    # Medias de los consumidores que se predijeron que no van a realizar una compra en los siguientes 90 días
+    purchase_predicted0_avg=pd.DataFrame(purchase_predicted0[['Recency', 'Frequency', 'Monetary_Value']].mean())
+    purchase_predicted0_avg.reset_index(inplace=True)
+    purchase_predicted0_avg.columns=['RFM_metric', 'mean_predicted0']
+    purchase_predicted0_avg['mean_predicted0']=purchase_predicted0_avg['mean_predicted0'].apply(lambda x: int(round(float(x),0)))
+
+    # Medias de los consumidores que se predijeron que si van a realizar una compra en los siguientes 90 días
+    purchase_predicted1_avg=pd.DataFrame(purchase_predicted1[['Recency', 'Frequency', 'Monetary_Value']].mean())
+    purchase_predicted1_avg.reset_index(inplace=True)
+    purchase_predicted1_avg.columns=['RFM_metric', 'mean_predicted1']
+    purchase_predicted1_avg['mean_predicted1']=purchase_predicted1_avg['mean_predicted1'].apply(lambda x: int(round(float(x),0)))
+
+    # Medias de los consumidores
+    purchase_predicted_avg=purchase_predicted0_avg.merge(purchase_predicted1_avg, on='RFM_metric', how='left')
+
+    # Gráfico de barras agrupado: Recency, Frequency, Monetary_Value
+    rfm_metrics = ("Recency", "Frequency", "Monetary_Value")
+    predicted_purchase_rfm = {
+        'Predicted_Purchase_0': purchase_predicted_avg.loc[:,"mean_predicted0"],
+        'Predicted_Purchase_1': purchase_predicted_avg.loc[:,"mean_predicted1"],
+    }
+
+    x = np.arange(len(rfm_metrics))  # the label locations
+    width = 0.15  # the width of the bars
+    multiplier = 0
+    i=0
+    colors=['blue', 'red']
+
+    fig2, ax2 = plt.subplots(layout='constrained', figsize=(10,5))
+
+    for attribute, measurement in predicted_purchase_rfm.items():
+        offset = width * multiplier
+        rects = ax2.bar(x + offset, measurement, width, label=attribute, color=colors[i])
+        ax2.bar_label(rects, padding=3)
+        multiplier+= 1
+        if i==1:
+          i=0
+        else:
+          i+=1
+    # Add some text for labels, title and custom x-axis tick labels, etc.
+    ax2.set_xlabel('RFM Metrics')
+    ax2.set_ylabel('mean values')
+    ax2.set_title('RFM metrics Perceptron Model-Escenario 2-Sin balanceo')
+    ax2.set_xticks(x + width, rfm_metrics)
+    ax2.legend(loc='upper center', ncols=2)
+    ax2.set_ylim(0, 9000)
+
+    #### Gráficos de Score (count, percentage) ##### 
+    # Dataframe del conteo y porcentaje del score de los clientes que se predijeron que no van a realizar una compra en los siguientes 90 días
+    score_count0=purchase_predicted0[['CustomerID', 'Score']].groupby('Score').count()
+    score_count0.reset_index(inplace=True)
+    score_count0.columns=['Score', 'Conteo']
+    score_count0['Porcentaje']=score_count0['Conteo'].apply(lambda x: round(x/len(purchase_predicted0)*100,2))
+
+    # Dataframe del conteo y porcentaje del score de los clientes que se predijeron que si van a realizar una compra en los siguientes 90 días
+    score_count1=purchase_predicted1[['CustomerID', 'Score']].groupby('Score').count()
+    score_count1.reset_index(inplace=True)
+    score_count1.columns=['Score', 'Conteo']
+    score_count1['Porcentaje']=score_count1['Conteo'].apply(lambda x: round(x/len(purchase_predicted1)*100,2))
+
+    # Dataframe del conteo y porcentaje del score de los clientes (purchase_predicted0 y purchase_predicted_1)
+    score_count=score_count0.merge(score_count1, on='Score', how='outer')
+    score_count.columns=['Score', 'Conteo_0', 'Porcentaje_0', 'Conteo_1', 'Porcentaje_1']
+    score_count=score_count.iloc[:, [0,1,3,2,4]]
+    score_count.fillna(0, inplace=True)
+
+    # Gráfico de barras agrupado: Conteo de Recency, Frequency y Monetary_Value
+    score_values = ("0", "1", "2", "3", "4", "5", "6", "7")
+    predicted_purchase_score_count = {
+        'Predicted_Purchase_0': score_count.loc[:,"Conteo_0"],
+        'Predicted_Purchase_1': score_count.loc[:,"Conteo_1"],
+    }
+
+    x = np.arange(len(score_values))  # the label locations
+    width = 0.4  # the width of the bars
+    multiplier = 0
+    i=0
+    colors=['blue', 'red']
+
+    fig3, ax3 = plt.subplots(layout='constrained', figsize=(10,5))
+
+    for attribute, measurement in predicted_purchase_score_count.items():
+        offset = width * multiplier
+        rects = ax3.bar(x + offset, measurement, width, label=attribute, color=colors[i])
+        ax3.bar_label(rects, padding=3)
+        multiplier+= 1
+        if i==1:
+          i=0
+        else:
+          i+=1
+    # Add some text for labels, title and custom x-axis tick labels, etc.
+    ax3.set_xlabel('Score')
+    ax3.set_ylabel('Count')
+    ax3.set_title('Score vs count Perceptron Model-Escenario 2-Sin balanceo')
+    ax3.set_xticks(x + width, score_values)
+    ax3.legend(loc='upper center', ncols=2)
+    ax3.set_ylim(0, 500)
+
+    #### Gráficos de Score vs Recency, Frequency y Monetary_Value (mean values) ##### 
+    # Dataframe con la media de recency de acuerdo al score de los clientes que se predijeron que no van a realizar una compra en los siguientes 90 días
+    score_rfm0=purchase_predicted0[['Score', 'Recency', 'Frequency', 'Monetary_Value']].groupby('Score').mean()
+    score_rfm0['Recency']=score_rfm0['Recency'].apply(lambda x: int(round(x,0)))
+    score_rfm0['Frequency']=score_rfm0['Frequency'].apply(lambda x: int(round(x,0)))
+    score_rfm0['Monetary_Value']=score_rfm0['Monetary_Value'].apply(lambda x: int(round(x,0)))
+    score_rfm0.reset_index(inplace=True)
+
+    # Dataframe con la media recency de acuerdo al score de los clientes que se predijeron que si van a realizar una compra en los siguientes 90 días
+    score_rfm1=purchase_predicted1[['Score', 'Recency', 'Frequency', 'Monetary_Value']].groupby('Score').mean()
+    score_rfm1['Recency']=score_rfm1['Recency'].apply(lambda x: int(round(x,0)))
+    score_rfm1['Frequency']=score_rfm1['Frequency'].apply(lambda x: int(round(x,0)))
+    score_rfm1['Monetary_Value']=score_rfm1['Monetary_Value'].apply(lambda x: int(round(x,0)))
+    score_rfm1.reset_index(inplace=True)
+
+    # Dataframe con la media recency de acuerdo al score de los clientes (purchase_predicted0 y purchase_predicted1)
+    score_rfm=score_rfm0.merge(score_rfm1, on='Score', how='outer')
+    score_rfm.columns=['Score', 'Recency_0', 'Frequency_0', 'Monetary_Value_0', 'Recency_1', 'Frequency_1', 'Monetary_Value_1']
+    score_rfm=score_rfm.iloc[:, [0,1,4,2,5,3,6]]
+    score_rfm.fillna(0, inplace=True)
+
+    # Gráfico de barras agrupado: Score vs Recency
+    score_values = ("0", "1", "2", "3", "4", "5", "6", "7")
+    predicted_purchase_score_recency = {
+        'Predicted_Purchase_0': score_rfm.loc[:,"Recency_0"],
+        'Predicted_Purchase_1': score_rfm.loc[:,"Recency_1"],
+    }
+
+    x = np.arange(len(score_values))  # the label locations
+    width = 0.4  # the width of the bars
+    multiplier = 0
+    i=0
+    colors=['blue', 'red']
+
+    fig4, ax4 = plt.subplots(layout='constrained', figsize=(10,5))
+
+    for attribute, measurement in predicted_purchase_score_recency.items():
+        offset = width * multiplier
+        rects = ax4.bar(x + offset, measurement, width, label=attribute, color=colors[i])
+        #ax.bar_label(rects, fmt=lambda x: x if x > 0 else '', padding=3)
+        ax4.bar_label(rects, padding=3)
+        multiplier+= 1
+        if i==1:
+          i=0
+        else:
+          i+=1
+    # Add some text for labels, title and custom x-axis tick labels, etc.
+    ax4.set_xlabel('Score')
+    ax4.set_ylabel('Recency mean')
+    ax4.set_title('Score vs Recency Perceptron Model-Escenario 2-Sin balanceo')
+    ax4.set_xticks(x + width, score_values)
+    ax4.legend(loc='upper center', ncols=2)
+    ax4.set_ylim(0, 600)
+
+    # Gráfico de barras agrupado: Score vs Frequency
+    score_values = ("0", "1", "2", "3", "4", "5", "6", "7")
+    predicted_purchase_score_frequency = {
+        'Predicted_Purchase_0': score_rfm.loc[:,"Frequency_0"],
+        'Predicted_Purchase_1': score_rfm.loc[:,"Frequency_1"],
+    }
+
+    x = np.arange(len(score_values))  # the label locations
+    width = 0.4  # the width of the bars
+    multiplier = 0
+    i=0
+    colors=['blue', 'red']
+
+    fig6, ax6 = plt.subplots(layout='constrained', figsize=(10,5))
+
+    for attribute, measurement in predicted_purchase_score_frequency.items():
+        offset = width * multiplier
+        rects = ax6.bar(x + offset, measurement, width, label=attribute, color=colors[i])
+        ax6.bar_label(rects, padding=3)
+        multiplier+= 1
+        if i==1:
+          i=0
+        else:
+          i+=1
+    # Add some text for labels, title and custom x-axis tick labels, etc.
+    ax6.set_xlabel('Score')
+    ax6.set_ylabel('Frequency mean')
+    ax6.set_title('Score vs Frequency Perceptron Model-Escenario 2-Sin balanceo')
+    ax6.set_xticks(x + width, score_values)
+    ax6.legend(loc='upper center', ncols=2)
+    ax6.set_ylim(0, 5000)
+
+    # Gráfico de barras agrupado: Score vs Monetary_Value
+    score_values = ("0", "1", "2", "3", "4", "5", "6", "7")
+    predicted_purchase_score_monetary_value = {
+        'Predicted_Purchase_0': score_rfm.loc[:,"Monetary_Value_0"],
+        'Predicted_Purchase_1': score_rfm.loc[:,"Monetary_Value_1"],
+    }
+
+    x = np.arange(len(score_values))  # the label locations
+    width = 0.4  # the width of the bars
+    multiplier = 0
+    i=0
+    colors=['blue', 'red']
+
+    fig7, ax7 = plt.subplots(layout='constrained', figsize=(10,5))
+
+    for attribute, measurement in predicted_purchase_score_monetary_value.items():
+        offset = width * multiplier
+        rects = ax7.bar(x + offset, measurement, width, label=attribute, color=colors[i])
+        ax7.bar_label(rects, padding=3)
+        multiplier+= 1
+        if i==1:
+          i=0
+        else:
+          i+=1
+    # Add some text for labels, title and custom x-axis tick labels, etc.
+    ax7.set_xlabel('Score')
+    ax7.set_ylabel('Monetary_Value mean')
+    ax7.set_title('Score vs Monetary_Value Perceptron Model-Escenario 2-Sin balanceo')
+    ax7.set_xticks(x + width, score_values)
+    ax7.legend(loc='upper center', ncols=2)
+    ax7.set_ylim(0, 140000)
+
+    ##### Dashboard #####
     # Encabezado del dashboard
     st.header("Dashboard Predicción de compra", divider=True)
 
-    # Establecer las columnas para los subencabezados
+    ## Primera fila ##
+    # Establecer las columnas para los subencabezados de la primera fila
     c1, c2 = st.columns(spec=[0.6, 0.4])
 
-    # Subencabezados
+    # Impresión de los subencabezados de la primera fila
     with c1:
-      st.subheader("Ventas últimos 3 meses", divider=True)
+      st.subheader("Ventas totales últimos 3 meses", divider=True)
     with c2:
-      st.subheader("Gráfico: Fecha vs Ventas totales", divider=True)
+      st.subheader("Ventas/Valor_monetario (total)", divider=True)
 
-    # Establecer las columnas para la visualización
+    # Establecer las columnas para la visualización de los gráficos de la primera fila
     c1, c2, c3, c4, c5 = st.columns(spec=[0.15, 0.15, 0.15, 0.15, 0.4])
 
-    # Impresion de los resultados generales
+    # Impresion de los gráficos de la primera fila
     with c1:
       st.metric(label="Ventas totales", value=ventas_totales_3_meses, delta=cambio_ventas_ultimo_trimestre)
     with c2:
@@ -618,6 +837,31 @@ if selected == "3. Resultados obtenidos":
       st.metric(label="Clientes", value=clientes_3_meses, delta=cambio_clientes_ultimo_trimestre)
     with c5:
       st.pyplot(fig1)
+
+    ## Segunda fila ##
+    # Establecer las columnas para los subencabezados de la segunda fila
+    c1, c2, c3 = st.columns(spec=[0.4, 0.3, 0.3])
+
+    # Impresión de los subencabezados de segunda fila
+    with c1:
+      st.subheader("Recencia, Frecuencia y Valor monetario (Promedios)", divider=True)
+    with c2:
+      st.subheader("Score de los clientes (conteo, %)", divider=True)
+    with c3:
+      st.subheader("Score vs Frecuencia (promedio)", divider=True)
+
+    # Establecer las columnas para la visualización de los gráficos de la segunda fila
+    c1, c2, c3 = st.columns(spec=[0.4, 0.3, 0.3])
+
+    # Impresion de los gráficos de la segunda fila
+    with c1:
+      st.pyplot(fig2)
+    with c2:
+      st.pyplot(fig3)
+    with c3:
+      st.pyplot(fig4)
+
+ 
 
 
 
