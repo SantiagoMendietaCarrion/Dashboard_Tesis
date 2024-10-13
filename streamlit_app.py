@@ -842,13 +842,13 @@ if selected == "3. Resultados obtenidos":
     # Establecer las columnas para los subencabezados de la segunda fila
     c1, c2, c3 = st.columns(spec=[1/3, 1/3, 1/3])
 
-    # Impresión de los subencabezados de segunda fila
+    # Impresión de los subencabezados de la segunda fila
     with c1:
       st.subheader("RFM (Promedios)", divider=True)
     with c2:
       st.subheader("Score de los clientes (conteo, %)", divider=True)
     with c3:
-      st.subheader("Score vs Frecuencia (promedio)", divider=True)
+      st.subheader("Score vs Recencia (promedio)", divider=True)
 
     # Establecer las columnas para la visualización de los gráficos de la segunda fila
     c1, c2, c3 = st.columns(spec=[1/3, 1/3, 1/3])
@@ -860,6 +860,29 @@ if selected == "3. Resultados obtenidos":
       st.pyplot(fig3)
     with c3:
       st.pyplot(fig4)
+
+    ## Tercera fila ##
+    # Establecer las columnas para los subencabezados de la tercera fila
+    c1, c2, c3 = st.columns(spec=[1/3, 1/3, 1/3])
+
+    # Impresión de los subencabezados de la tercera fila
+    with c1:
+      st.subheader("Productos más vendidos (3 meses))", divider=True)
+    with c2:
+      st.subheader("Score vs Frecuencia (promedio)", divider=True)
+    with c3:
+      st.subheader("Score vs Valor monetario (promedio)", divider=True)
+
+    # Establecer las columnas para la visualización de los gráficos de la tercera fila
+    c1, c2, c3 = st.columns(spec=[1/3, 1/3, 1/3])
+
+    # Impresion de los gráficos de la tercera fila
+    #with c1:
+    #  st.pyplot(fig2)
+    with c2:
+      st.pyplot(fig6)
+    with c3:
+      st.pyplot(fig7)
 
  
 
