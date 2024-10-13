@@ -827,7 +827,7 @@ if selected == "3. Resultados obtenidos":
     x=data9_part1_mejores_productos_head2['Porcentaje']
     y=data9_part1_mejores_productos_head2['Description']
     ax5.barh(y=y,  width=x, color=colores)
-    ax5.bar_label(ax.containers[0], padding=3)
+    ax5.bar_label(ax5.containers[0], padding=3)
     ax5.set_xlabel('Total sales (%)')
     ax5.set_ylabel('Product names')
     ax5.set_title('Products vs Total sales (%) Perceptron Model-Escenario 2-Sin balanceo')
