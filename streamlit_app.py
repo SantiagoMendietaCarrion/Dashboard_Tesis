@@ -453,8 +453,9 @@ if selected == '3. Métricas de evaluación':
     ax1.set_xticks(x + width, evaluation_metrics)
     ax1.legend(loc='upper center', ncols=4)
     ax1.set_ylim(0, 1.1)
-    fig1.savefig('pcp_barplot_evaluation_metrics2.png')
-    save_path_fig1 = Path(save_folder_image, uploaded_file.name)
+    fig1_name='pcp_barplot_evaluation_metrics2.png'
+    save_path_fig1 = Path(save_folder_image, fig1_name)
+    fig1.savefig(save_path_fig1)
     #pcp_barplot_evaluation_metrics2 = Image.open('pcp_barplot_evaluation_metrics2.png')
       
     # Obtener Curva ROC
@@ -469,7 +470,9 @@ if selected == '3. Métricas de evaluación':
     ax2.legend(loc='lower right', ncols=1)
     ax2.set_xlim(-0.01, 1.01)
     ax2.set_ylim(-0.01, 1.01)
-    fig2.savefig('pcp_roc_curve2.png')
+    fig2_name='pcp_roc_curve2.png'
+    save_path_fig2 = Path(save_folder_image, fig2_name)
+    fig2.savefig(save_path_fig2)
     #pcp_roc_curve2 = Image.open('pcp_roc_curve2.png')
 
     # Obtener Curva Precision-Recall
@@ -484,7 +487,9 @@ if selected == '3. Métricas de evaluación':
     ax3.legend(loc='lower left', ncols=1)
     ax3.set_xlim(-0.01, 1.01)
     ax3.set_ylim(-0.01, 1.01)
-    fig3.savefig('pcp_precision_recall_curve2.png')
+    fig3_name='pcp_precision_recall_curve2.png'
+    save_path_fig3 = Path(save_folder_image, fig3_name)
+    fig3.savefig(save_path_fig3)
     #pcp_precision_recall_curve2 = Image.open('pcp_precision_recall_curve2.png')
 
     # Inicializar las variables en st.session_state
