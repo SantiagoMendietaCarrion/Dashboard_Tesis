@@ -78,7 +78,7 @@ if selected == '1. Ingreso de archivos':
     ss.save_path = save_path
 
 # Ventana para visualización de archivos
-if selected == '2. Visualización de archivos':
+if selected == '2. Visualización archivos':
 
   # Título de la ventana
   st.title('Visualización de archivos')
