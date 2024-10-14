@@ -57,20 +57,21 @@ if selected == '1. Ingreso de archivos':
   ss.loaded_csv = st.file_uploader("Escoja el archivo CSV")
   uploaded_file=ss.loaded_csv
 
-  # Guardar el archivo subido en una carpeta
-  save_folder = f'{working_dir}/uploaded_files'
-  save_path = Path(save_folder, uploaded_file.name)
-  with open(save_path, mode='wb') as w:
+  # Botón para visualizar el dataset inicial y el nuevo
+  if st.button('Guardar y visualizar el dataset'):
+
+    # Guardar el archivo subido en una carpeta
+    save_folder = f'{working_dir}/uploaded_files'
+    save_path = Path(save_folder, uploaded_file.name)
+    with open(save_path, mode='wb') as w:
       w.write(uploaded_file.getvalue())
-  
-  # Imprimir mensaje de que se ha guardado el archivo
-  if save_path.exists():
+    
+    # Imprimir mensaje de que se ha guardado el archivo
+    if save_path.exists():
       st.success(f'El archivo {uploaded_file.name} se guardó correctamente.')
 
-  # Botón para visualizar el dataset inicial y el nuevo
-  if st.button('Visualizar el dataset'):
     # Obtener el dataset inicial
-    data = pd.read_csv(ss.loaded_csv, sep=",")
+    data = pd.read_csv(save_path, sep=",")
 
     # Cambiar el nombre de la columna Customer ID
     data.rename(columns={'Customer ID':'CustomerID'}, inplace=True)
