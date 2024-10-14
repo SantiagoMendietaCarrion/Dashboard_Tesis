@@ -494,15 +494,11 @@ if selected == '3. Métricas de evaluación':
       st.header("Dataframe", divider=True)
       st.dataframe(pcp_report_df2_mod)
       st.header("Gráfico de barras", divider=True)
-      st.pyplot(fig1)
+      st.image(pcp_barplot_evaluation_metrics2)
       st.header("Curva ROC", divider=True)
-      c1, c2 = st.columns(2)
-      with c1:
-        st.pyplot(fig2)
+      st.image(pcp_roc_curve2)
       st.header("Curva Precision-Recall", divider=True)
-      c1, c2 = st.columns(2)
-      with c1:
-        st.pyplot(fig3)
+      st.image(pcp_precision_recall_curve2)
 
 # Ventana para la visualización de los resultados obtenidos
 if selected == "4. Resultados obtenidos":
