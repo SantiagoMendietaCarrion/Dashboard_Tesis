@@ -36,7 +36,7 @@ with st.sidebar:
     selected = option_menu('Sistema de predicción de compra',
 
                            ['1. Ingreso de archivos',
-                            '2. Visualización de archivos',
+                            '2. Visualización archivos',
                             '3. Métricas de evaluación',
                             '4. Resultados obtenidos'],
                            menu_icon='house',
@@ -327,7 +327,7 @@ if selected == '2. Visualización de archivos':
     st.dataframe(data_nuevo17, width=1800, height=1200)     
               
 # Ventana para la visualización de las métricas de evaluación
-if selected == '2. Métricas de evaluación':
+if selected == '3. Métricas de evaluación':
 
     # Título de la ventana
     st.title('Visualización de las métricas de evaluación')
@@ -501,7 +501,7 @@ if selected == '2. Métricas de evaluación':
       st.image(pcp_precision_recall_curve2)
 
 # Ventana para la visualización de los resultados obtenidos
-if selected == "3. Resultados obtenidos":
+if selected == "4. Resultados obtenidos":
 
   # page title
   st.title("Visualización de los resultados obtenidos - Dashboard")
