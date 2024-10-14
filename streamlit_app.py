@@ -843,15 +843,27 @@ if selected == "3. Resultados obtenidos":
 
     # Impresión de los subencabezados de la primera fila
     with c1:
-      st.subheader("Ventas totales últimos 3 meses", divider=True)
+      st.subheader("Ventas totales (últimos 3 meses)", divider=True)
     with c2:
       st.subheader("Ventas/Valor_monetario (total)", divider=True)
 
     # Establecer las columnas para la visualización de los gráficos de la primera fila
     c1, c2, c3, c4, c5 = st.columns(spec=[0.15, 0.15, 0.15, 0.15, 0.4])
 
+    # Definir CSS para el color de fondo
+    style = """
+    <style>
+    .metric-container {
+        background-color: #f0f2f6;
+        border-radius: 10px;
+        padding: 10px;
+    }
+    </style>
+    """
+
     # Impresion de los gráficos de la primera fila
     with c1:
+      st.markdown(style, unsafe_allow_html=True)
       st.metric(label="Ventas totales", value=ventas_totales_3_meses, delta=cambio_ventas_ultimo_trimestre)
     with c2:
       st.metric(label="Transacciones totales", value=transacciones_totales_3_meses, delta=cambio_transacciones_ultimo_trimestre)
@@ -868,7 +880,7 @@ if selected == "3. Resultados obtenidos":
 
     # Impresión de los subencabezados de la segunda fila
     with c1:
-      st.subheader("RFM (Promedios)", divider=True)
+      st.subheader("Métricas RFM (promedios)", divider=True)
     with c2:
       st.subheader("Score de los clientes (conteo, %)", divider=True)
     with c3:
@@ -891,7 +903,7 @@ if selected == "3. Resultados obtenidos":
 
     # Impresión de los subencabezados de la tercera fila
     with c1:
-      st.subheader("Productos más vendidos (3 meses))", divider=True)
+      st.subheader("Mejores productos (últimos 3 meses))", divider=True)
     with c2:
       st.subheader("Score vs Frecuencia (promedio)", divider=True)
     with c3:
