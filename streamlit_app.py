@@ -329,180 +329,184 @@ if selected == '2. Visualización archivos':
 # Ventana para la visualización de las métricas de evaluación
 if selected == '3. Métricas de evaluación':
 
-    # Título de la ventana
-    st.title('Visualización de las métricas de evaluación')
- 
-    # Botón para visualizar las métricas de evaluación
-    if st.button('Calcular las métricas de evaluación'):
+  # Título de la ventana
+  st.title('Visualización de las métricas de evaluación')
+
+  # Botón para visualizar las métricas de evaluación
+  if st.button('Calcular las métricas de evaluación'):
+  
+    # Asignar el dataframe (csv) a la variable de la pagina actual
+    data_nuevo17 = ss.data_nuevo17
+
+    # Selección de las mejores variables mediante SelectKBest Escenario 2
+    X=data_nuevo17.drop(['Purchase'], axis=1)
+    y=data_nuevo17['Purchase']
+    best=SelectKBest(k=8)
+    X_new = best.fit_transform(X, y)
+    selected2 = best.get_support(indices=True)
+    variables_selectkbest_prev = list(X.columns[selected2])
+    variables_selectkbest_prev.pop()
+    variables_selectkbest2=variables_selectkbest_prev.copy()
+
+    # División del dataset nuevo en features y target
+    features=data_nuevo17.iloc[:, 0:data_nuevo17.shape[1]-1]
+    target=data_nuevo17.iloc[:, data_nuevo17.shape[1]-1]
+
+    # Normalización de los datos mediante StandardScaler
+    scaler1 = StandardScaler()
+    features_NormStd = scaler1.fit_transform(features)
+    features_NormStd = pd.DataFrame(features_NormStd, columns=features.columns)
+
+    # División de los datos en entrenamiento y testeo
+    train_X, test_X, train_Y, test_Y = train_test_split(features_NormStd, target, test_size=0.3, random_state=46, shuffle=True)
+
+    # Variables de entrenamiento (features) no balanceadas
+    train_X2=train_X[variables_selectkbest2]
+
+    # Variable de entrenamiento (target) no balanceadas
+    train_Y2=train_Y.copy()
+
+    # Variables de testeo (features)
+    test_X2=test_X[variables_selectkbest2]
+
+    # Variable de testeo (target)
+    test_Y2=test_Y.copy()
+
+    # Dataframe con el valor real y el valor predecido
+    pcp_predictions2 = best_pcp_model2.predict(test_X2)  #Realizar la predicción
+    pcp_df2 = pd.DataFrame({'Valor real':test_Y2,'Valor predecido': pcp_predictions2}) #Crear dataframe (y_real, pcp_predictions)
+
+    # Matriz de confusión
+    pcp_cm2 = confusion_matrix(test_Y2, pcp_predictions2)
+
+    # Obtener el reporte de métricas de evaluación en formato de diccionario
+    targets = ['0', '1']
+    pcp_report_dict2=classification_report(test_Y2, pcp_predictions2, target_names=targets, output_dict=True)
+
+    # Obtener la exactitud (accuracy) de los datos de prueba
+    pcp_accuracy_test2 = best_pcp_model2.score(test_X2, test_Y2)
+
+    # Probabilidades o puntajes de confianza
+    pcp_probabilities2=best_pcp_model2.decision_function(test_X2)
+
+    # Obtener AUC Score
+    pcp_auc_score2=roc_auc_score(test_Y2, pcp_probabilities2)
+
+    # Obtener Precision Score
+    pcp_average_precision_score2=average_precision_score(test_Y2, pcp_probabilities2)
+
+    # Dataframe con los resultados de las métricas de evaluación
+    pcp_report_df2=pd.DataFrame(pcp_report_dict2)
+    pcp_report_df2.reset_index(inplace=True)
+    pcp_report_df2.drop(columns=['accuracy'], inplace=True)
+    pcp_report_df2.columns=['metric', 'class 0', 'class 1', 'macro avg', 'weighted avg']
+    accuracy_row=['accuracy', '0','0', pcp_accuracy_test2, '0']
+    auc_score_row=['auc_score', '0','0', pcp_auc_score2, '0']
+    precision_score_row=['precision_score', '0','0', pcp_average_precision_score2, '0']
+    pcp_report_df2.loc[2.1]=accuracy_row
+    pcp_report_df2.loc[2.2]=auc_score_row
+    pcp_report_df2.loc[2.3]=precision_score_row
+    pcp_report_df2.sort_index(inplace=True)
+    pcp_report_df2.reset_index(drop=True, inplace=True)
+    pcp_report_df2['class 0']=pcp_report_df2['class 0'].apply(lambda x: round(float(x),2))
+    pcp_report_df2['class 1']=pcp_report_df2['class 1'].apply(lambda x: round(float(x),2))
+    pcp_report_df2['macro avg']=pcp_report_df2['macro avg'].apply(lambda x: round(float(x),2))
+    pcp_report_df2['weighted avg']=pcp_report_df2['weighted avg'].apply(lambda x: round(float(x),2))
+
+    # Obtener copia del dataframe pcp_report_df2 para reemplazar los ceros con NaN
+    pcp_report_df2_mod=pcp_report_df2.copy()
+    pcp_report_df2_mod.replace(0, np.nan, inplace=True)
+
+    # Carpeta para guardar las imágenes
+    save_folder_image = f'{working_dir}/saved_images'
     
-      # Asignar el dataframe (csv) a la variable de la pagina actual
-      data_nuevo17 = ss.data_nuevo17
+    # Gráfico de barras agrupado: Precision, Recall, F1-Score. Accuracy, AUC-Score, Precision-Score
+    evaluation_metrics = ("Precision", "Recall", "F1-Score", "Accuracy", "AUC-Score", "Precision-Score")
+    class_metrics = {
+        'class 0': pcp_report_df2.loc[0:5,"class 0"],
+        'class 1': pcp_report_df2.loc[0:5,"class 1"],
+        'macro avg': pcp_report_df2.loc[0:5,"macro avg"],
+        'weighted avg': pcp_report_df2.loc[0:5,"weighted avg"],
+    }
 
-      # Selección de las mejores variables mediante SelectKBest Escenario 2
-      X=data_nuevo17.drop(['Purchase'], axis=1)
-      y=data_nuevo17['Purchase']
-      best=SelectKBest(k=8)
-      X_new = best.fit_transform(X, y)
-      selected2 = best.get_support(indices=True)
-      variables_selectkbest_prev = list(X.columns[selected2])
-      variables_selectkbest_prev.pop()
-      variables_selectkbest2=variables_selectkbest_prev.copy()
+    x = np.arange(len(evaluation_metrics))  # the label locations
+    width = 0.15  # the width of the bars
+    multiplier = 0
+    i=0
+    colors=['blue', 'red', 'orange', 'green']
 
-      # División del dataset nuevo en features y target
-      features=data_nuevo17.iloc[:, 0:data_nuevo17.shape[1]-1]
-      target=data_nuevo17.iloc[:, data_nuevo17.shape[1]-1]
+    fig1, ax1 = plt.subplots(layout='constrained', figsize=(15,5))
 
-      # Normalización de los datos mediante StandardScaler
-      scaler1 = StandardScaler()
-      features_NormStd = scaler1.fit_transform(features)
-      features_NormStd = pd.DataFrame(features_NormStd, columns=features.columns)
+    for attribute, measurement in class_metrics.items():
+        offset = width * multiplier
+        rects = ax1.bar(x + offset, measurement, width, label=attribute, color=colors[i])
+        ax1.bar_label(rects, fmt=lambda x: x if x > 0 else '', padding=3)
+        multiplier+= 1
+        if i==3:
+          i=0
+        else:
+          i+=1
+    # Add some text for labels, title and custom x-axis tick labels, etc.
+    ax1.set_xlabel('Metrics')
+    ax1.set_ylabel('Values (0 a 1)')
+    ax1.set_title('Evaluation metrics Perceptron Model-Escenario 2-Sin balanceo')
+    ax1.set_xticks(x + width, evaluation_metrics)
+    ax1.legend(loc='upper center', ncols=4)
+    ax1.set_ylim(0, 1.1)
+    fig1.savefig('pcp_barplot_evaluation_metrics2.png')
+    save_path_fig1 = Path(save_folder_image, uploaded_file.name)
+    #pcp_barplot_evaluation_metrics2 = Image.open('pcp_barplot_evaluation_metrics2.png')
+      
+    # Obtener Curva ROC
+    fig2, ax2 = plt.subplots(layout='constrained', figsize=(5,5))
+    fpr, tpr, thresholds = roc_curve(test_Y2, pcp_probabilities2)
+    pcp_auc_score2=round(roc_auc_score(test_Y2, pcp_probabilities2),2)
+    pcp_auc_score2_label="Perceptron (AUC= "+str(pcp_auc_score2)+")"
+    ax2.plot(fpr, tpr, label=pcp_auc_score2_label)
+    ax2.set_xlabel('False Positive Rate (Positive label: 1)')
+    ax2.set_ylabel('True Positive Rate (Positive label: 1)')
+    ax2.set_title('ROC Curve Perceptron Model-Escenario 2-Sin balanceo')
+    ax2.legend(loc='lower right', ncols=1)
+    ax2.set_xlim(-0.01, 1.01)
+    ax2.set_ylim(-0.01, 1.01)
+    fig2.savefig('pcp_roc_curve2.png')
+    #pcp_roc_curve2 = Image.open('pcp_roc_curve2.png')
 
-      # División de los datos en entrenamiento y testeo
-      train_X, test_X, train_Y, test_Y = train_test_split(features_NormStd, target, test_size=0.3, random_state=46, shuffle=True)
+    # Obtener Curva Precision-Recall
+    fig3, ax3 = plt.subplots(layout='constrained', figsize=(5,5))
+    precision, recall, thresholds = precision_recall_curve(test_Y2, pcp_probabilities2)
+    pcp_precision_score2=round(average_precision_score(test_Y2, pcp_probabilities2),2)
+    pcp_precision_score2_label="Perceptron (AP= "+str(pcp_precision_score2)+")"
+    ax3.plot(recall, precision, label=pcp_precision_score2_label)
+    ax3.set_xlabel('Recall (Positive label: 1)')
+    ax3.set_ylabel('Precision (Positive label: 1)')
+    ax3.set_title('P-R Curve Perceptron Model-Escenario 2-Sin balanceo')
+    ax3.legend(loc='lower left', ncols=1)
+    ax3.set_xlim(-0.01, 1.01)
+    ax3.set_ylim(-0.01, 1.01)
+    fig3.savefig('pcp_precision_recall_curve2.png')
+    #pcp_precision_recall_curve2 = Image.open('pcp_precision_recall_curve2.png')
 
-      # Variables de entrenamiento (features) no balanceadas
-      train_X2=train_X[variables_selectkbest2]
+    # Inicializar las variables en st.session_state
+    if "pcp_df2" not in ss:
+      ss.pcp_df2 = ""
 
-      # Variable de entrenamiento (target) no balanceadas
-      train_Y2=train_Y.copy()
+    # Asignación de las variables obtenidas a las variables st.session_state
+    ss.pcp_df2 = pcp_df2
 
-      # Variables de testeo (features)
-      test_X2=test_X[variables_selectkbest2]
-
-      # Variable de testeo (target)
-      test_Y2=test_Y.copy()
-
-      # Dataframe con el valor real y el valor predecido
-      pcp_predictions2 = best_pcp_model2.predict(test_X2)  #Realizar la predicción
-      pcp_df2 = pd.DataFrame({'Valor real':test_Y2,'Valor predecido': pcp_predictions2}) #Crear dataframe (y_real, pcp_predictions)
-
-      # Matriz de confusión
-      pcp_cm2 = confusion_matrix(test_Y2, pcp_predictions2)
-
-      # Obtener el reporte de métricas de evaluación en formato de diccionario
-      targets = ['0', '1']
-      pcp_report_dict2=classification_report(test_Y2, pcp_predictions2, target_names=targets, output_dict=True)
-
-      # Obtener la exactitud (accuracy) de los datos de prueba
-      pcp_accuracy_test2 = best_pcp_model2.score(test_X2, test_Y2)
-
-      # Probabilidades o puntajes de confianza
-      pcp_probabilities2=best_pcp_model2.decision_function(test_X2)
-
-      # Obtener AUC Score
-      pcp_auc_score2=roc_auc_score(test_Y2, pcp_probabilities2)
-
-      # Obtener Precision Score
-      pcp_average_precision_score2=average_precision_score(test_Y2, pcp_probabilities2)
-
-      # Dataframe con los resultados de las métricas de evaluación
-      pcp_report_df2=pd.DataFrame(pcp_report_dict2)
-      pcp_report_df2.reset_index(inplace=True)
-      pcp_report_df2.drop(columns=['accuracy'], inplace=True)
-      pcp_report_df2.columns=['metric', 'class 0', 'class 1', 'macro avg', 'weighted avg']
-      accuracy_row=['accuracy', '0','0', pcp_accuracy_test2, '0']
-      auc_score_row=['auc_score', '0','0', pcp_auc_score2, '0']
-      precision_score_row=['precision_score', '0','0', pcp_average_precision_score2, '0']
-      pcp_report_df2.loc[2.1]=accuracy_row
-      pcp_report_df2.loc[2.2]=auc_score_row
-      pcp_report_df2.loc[2.3]=precision_score_row
-      pcp_report_df2.sort_index(inplace=True)
-      pcp_report_df2.reset_index(drop=True, inplace=True)
-      pcp_report_df2['class 0']=pcp_report_df2['class 0'].apply(lambda x: round(float(x),2))
-      pcp_report_df2['class 1']=pcp_report_df2['class 1'].apply(lambda x: round(float(x),2))
-      pcp_report_df2['macro avg']=pcp_report_df2['macro avg'].apply(lambda x: round(float(x),2))
-      pcp_report_df2['weighted avg']=pcp_report_df2['weighted avg'].apply(lambda x: round(float(x),2))
-
-      # Obtener copia del dataframe pcp_report_df2 para reemplazar los ceros con NaN
-      pcp_report_df2_mod=pcp_report_df2.copy()
-      pcp_report_df2_mod.replace(0, np.nan, inplace=True)
- 
-      # Gráfico de barras agrupado: Precision, Recall, F1-Score. Accuracy, AUC-Score, Precision-Score
-      evaluation_metrics = ("Precision", "Recall", "F1-Score", "Accuracy", "AUC-Score", "Precision-Score")
-      class_metrics = {
-          'class 0': pcp_report_df2.loc[0:5,"class 0"],
-          'class 1': pcp_report_df2.loc[0:5,"class 1"],
-          'macro avg': pcp_report_df2.loc[0:5,"macro avg"],
-          'weighted avg': pcp_report_df2.loc[0:5,"weighted avg"],
-      }
-
-      x = np.arange(len(evaluation_metrics))  # the label locations
-      width = 0.15  # the width of the bars
-      multiplier = 0
-      i=0
-      colors=['blue', 'red', 'orange', 'green']
-
-      fig1, ax1 = plt.subplots(layout='constrained', figsize=(15,5))
-
-      for attribute, measurement in class_metrics.items():
-          offset = width * multiplier
-          rects = ax1.bar(x + offset, measurement, width, label=attribute, color=colors[i])
-          ax1.bar_label(rects, fmt=lambda x: x if x > 0 else '', padding=3)
-          multiplier+= 1
-          if i==3:
-            i=0
-          else:
-            i+=1
-      # Add some text for labels, title and custom x-axis tick labels, etc.
-      ax1.set_xlabel('Metrics')
-      ax1.set_ylabel('Values (0 a 1)')
-      ax1.set_title('Evaluation metrics Perceptron Model-Escenario 2-Sin balanceo')
-      ax1.set_xticks(x + width, evaluation_metrics)
-      ax1.legend(loc='upper center', ncols=4)
-      ax1.set_ylim(0, 1.1)
-      #fig1.savefig('pcp_barplot_evaluation_metrics2.png')
-      #pcp_barplot_evaluation_metrics2 = Image.open('pcp_barplot_evaluation_metrics2.png')
-       
-      # Obtener Curva ROC
-      fig2, ax2 = plt.subplots(layout='constrained', figsize=(5,5))
-      fpr, tpr, thresholds = roc_curve(test_Y2, pcp_probabilities2)
-      pcp_auc_score2=round(roc_auc_score(test_Y2, pcp_probabilities2),2)
-      pcp_auc_score2_label="Perceptron (AUC= "+str(pcp_auc_score2)+")"
-      ax2.plot(fpr, tpr, label=pcp_auc_score2_label)
-      ax2.set_xlabel('False Positive Rate (Positive label: 1)')
-      ax2.set_ylabel('True Positive Rate (Positive label: 1)')
-      ax2.set_title('ROC Curve Perceptron Model-Escenario 2-Sin balanceo')
-      ax2.legend(loc='lower right', ncols=1)
-      ax2.set_xlim(-0.01, 1.01)
-      ax2.set_ylim(-0.01, 1.01)
-      #fig2.savefig('pcp_roc_curve2.png')
-      #pcp_roc_curve2 = Image.open('pcp_roc_curve2.png')
-
-      # Obtener Curva Precision-Recall
-      fig3, ax3 = plt.subplots(layout='constrained', figsize=(5,5))
-      precision, recall, thresholds = precision_recall_curve(test_Y2, pcp_probabilities2)
-      pcp_precision_score2=round(average_precision_score(test_Y2, pcp_probabilities2),2)
-      pcp_precision_score2_label="Perceptron (AP= "+str(pcp_precision_score2)+")"
-      ax3.plot(recall, precision, label=pcp_precision_score2_label)
-      ax3.set_xlabel('Recall (Positive label: 1)')
-      ax3.set_ylabel('Precision (Positive label: 1)')
-      ax3.set_title('P-R Curve Perceptron Model-Escenario 2-Sin balanceo')
-      ax3.legend(loc='lower left', ncols=1)
-      ax3.set_xlim(-0.01, 1.01)
-      ax3.set_ylim(-0.01, 1.01)
-      #fig3.savefig('pcp_precision_recall_curve2.png')
-      #pcp_precision_recall_curve2 = Image.open('pcp_precision_recall_curve2.png')
-
-      # Inicializar las variables en st.session_state
-      if "pcp_df2" not in ss:
-        ss.pcp_df2 = ""
-
-      # Asignación de las variables obtenidas a las variables st.session_state
-      ss.pcp_df2 = pcp_df2
-
-      # Mostrar las métricas de evaluación
-      st.header("Dataframe", divider=True)
-      st.dataframe(pcp_report_df2_mod)
-      st.header("Gráfico de barras", divider=True)
-      st.pyplot(fig1)
-      st.header("Curva ROC", divider=True)
-      c1, c2 = st.columns(2)
-      with c1:
-        st.pyplot(fig2)
-      st.header("Curva Precision-Recall", divider=True)
-      c1, c2 = st.columns(2)
-      with c1:
-        st.pyplot(fig3)
+    # Mostrar las métricas de evaluación
+    st.header("Dataframe", divider=True)
+    st.dataframe(pcp_report_df2_mod)
+    st.header("Gráfico de barras", divider=True)
+    st.pyplot(fig1)
+    st.header("Curva ROC", divider=True)
+    c1, c2 = st.columns(2)
+    with c1:
+      st.pyplot(fig2)
+    st.header("Curva Precision-Recall", divider=True)
+    c1, c2 = st.columns(2)
+    with c1:
+      st.pyplot(fig3)
 
 # Ventana para la visualización de los resultados obtenidos
 if selected == "4. Resultados obtenidos":
