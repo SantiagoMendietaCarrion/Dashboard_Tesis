@@ -18,7 +18,6 @@ from sklearn.metrics import RocCurveDisplay
 from sklearn.metrics import PrecisionRecallDisplay
 from PIL import Image
 from streamlit import session_state as ss
-from pathlib import Path
 
 # Establecer la configuración de la página
 st.set_page_config(page_title="Purchase prediction",
@@ -55,19 +54,20 @@ if selected == '1. Ingreso de archivos':
   
   # Carga del archivo csv
   ss.loaded_csv = st.file_uploader("Escoja el archivo CSV")
-  uploaded_file=ss.loaded_csv
 
-  # Guardar el archivo subido en una carpeta
-  save_folder = f'{working_dir}/uploaded_files'
-  save_path = Path(save_folder, uploaded_file.name)
-  with open(save_path, mode='wb') as w:
-      w.write(uploaded_file.getvalue())
-  
-  # Imprimir mensaje de que se ha guardado el archivo
-  if save_path.exists():
-      st.success(f'El archivo {uploaded_file.name} se guardó correctamente.')
+  # Inicializar atributo en st.session_state para guardar el estado del botón de visualizar el dataset
+  #if 'clicked' not in ss:
+  #  ss.clicked = False
+
+  # Función para cambiar el estado del botón de visualizar el dataset
+  #def click_button():
+  #  ss.clicked = True
+
+  # Botón de visualizar el dataset
+  #st.button('Visualizar el dataset', on_click=click_button)    
 
   # Botón para visualizar el dataset inicial y el nuevo
+  #if ss.clicked and ss.loaded_csv:
   if st.button('Visualizar el dataset'):
     # Obtener el dataset inicial
     data = pd.read_csv(ss.loaded_csv, sep=",")
