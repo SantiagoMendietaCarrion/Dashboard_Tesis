@@ -36,7 +36,7 @@ with st.sidebar:
     selected = option_menu('Sistema de predicción de compra',
 
                            ['1. Ingreso de archivos',
-                            '2. Visualización de archivos'
+                            '2. Visualización de archivos',
                             '3. Métricas de evaluación',
                             '4. Resultados obtenidos'],
                            menu_icon='house',
