@@ -863,7 +863,7 @@ if selected == "3. Resultados obtenidos":
 
     # Impresion de los gráficos de la primera fila
     with c1:
-      st.markdown(style, unsafe_allow_html=True)
+      #st.markdown(style, unsafe_allow_html=True)
       st.metric(label="Ventas totales", value=ventas_totales_3_meses, delta=cambio_ventas_ultimo_trimestre)
     with c2:
       st.metric(label="Transacciones totales", value=transacciones_totales_3_meses, delta=cambio_transacciones_ultimo_trimestre)
@@ -903,7 +903,7 @@ if selected == "3. Resultados obtenidos":
 
     # Impresión de los subencabezados de la tercera fila
     with c1:
-      st.subheader("Mejores productos (últimos 3 meses))", divider=True)
+      st.subheader("Mejores productos (últimos 3 meses)", divider=True)
     with c2:
       st.subheader("Score vs Frecuencia (promedio)", divider=True)
     with c3:
