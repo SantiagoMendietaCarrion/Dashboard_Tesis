@@ -36,14 +36,14 @@ with st.sidebar:
     selected = option_menu('Sistema de predicción de compra',
 
                            ['1. Ingreso de archivos',
-                            '2. Métricas de evaluación',
-                            '3. Resultados obtenidos'],
+                            '2. Visualización de archivos'
+                            '3. Métricas de evaluación',
+                            '4. Resultados obtenidos'],
                            menu_icon='house',
-                           icons=['cloud-upload', 'cast', 'cast'],
+                           icons=['cloud-upload', 'cast', 'cast', 'cast'],
                            default_index=0)
 
-
-# Ventana para ingreso y visualización de archivos
+# Ventana para ingreso de archivos
 if selected == '1. Ingreso de archivos':
 
   # Título de la ventana
@@ -58,7 +58,7 @@ if selected == '1. Ingreso de archivos':
   uploaded_file=ss.loaded_csv
 
   # Botón para visualizar el dataset inicial y el nuevo
-  if st.button('Guardar y visualizar el dataset'):
+  if st.button('Guardar el dataset'):
 
     # Guardar el archivo subido en una carpeta
     save_folder = f'{working_dir}/uploaded_files'
@@ -69,6 +69,25 @@ if selected == '1. Ingreso de archivos':
     # Imprimir mensaje de que se ha guardado el archivo
     if save_path.exists():
       st.success(f'El archivo {uploaded_file.name} se guardó correctamente.')
+  
+    # Inicializar las variables en st.session_state
+    if "save_path" not in ss:
+      ss.save_path = ""
+      
+    # Asignación de las variables obtenidas a las variables st.session_state
+    ss.save_path = save_path
+
+# Ventana para visualización de archivos
+if selected == '2. Visualización de archivos':
+
+  # Título de la ventana
+  st.title('Visualización de archivos')
+  
+  # Botón para visualizar el dataset inicial y el nuevo
+  if st.button('Visualizar el dataset'):
+
+    # Obtener la ruta en donde se guardó el dataset
+    save_path = ss.save_path
 
     # Obtener el dataset inicial
     data = pd.read_csv(save_path, sep=",")
