@@ -73,17 +73,17 @@ if selected == '1. Ingreso de archivos':
     save_path = Path(save_folder, uploaded_file.name)
     with open(save_path, mode='wb') as w:
       w.write(uploaded_file.getvalue())
-    
-    # Imprimir mensaje de que se ha guardado el archivo
-    if save_path.exists():
-      st.success(f'El archivo {uploaded_file.name} se guardó correctamente.')
-  
+      
     # Inicializar las variables en st.session_state
     if "save_path" not in ss:
       ss.save_path = ""
       
     # Asignación de las variables obtenidas a las variables st.session_state
     ss.save_path = save_path
+    
+  # Imprimir mensaje de que se ha guardado el archivo
+  if save_path.exists():
+    st.success(f'El archivo {uploaded_file.name} se guardó correctamente.')
 
 # Ventana para visualización de archivos
 if selected == '2. Visualización archivos':
@@ -102,14 +102,6 @@ if selected == '2. Visualización archivos':
     ss.data9_part2 = ""
   if "data_nuevo17" not in ss:
     ss.data_nuevo17 = ""
-
-  # Realizar la visualización de los datasets cuando se encuentran creados
-  if ss.data is not "":
-    # Mostrar los datasets
-    st.header("Dataset inicial", divider=True)
-    st.dataframe(ss.data, width=1800, height=1200)
-    st.header("Dataset nuevo", divider=True)
-    st.dataframe(ss.data_nuevo17, width=1800, height=1200) 
 
   # Botón para visualizar el dataset inicial y el nuevo
   if st.button('Visualizar y transformar el dataset'):
@@ -339,7 +331,15 @@ if selected == '2. Visualización archivos':
     st.header("Dataset inicial", divider=True)
     st.dataframe(data, width=1800, height=1200)
     st.header("Dataset nuevo", divider=True)
-    st.dataframe(data_nuevo17, width=1800, height=1200)     
+    st.dataframe(data_nuevo17, width=1800, height=1200)    
+
+  # Realizar la visualización de los datasets cuando se encuentran creados
+  if ss.data is not "":
+    # Mostrar los datasets
+    st.header("Dataset inicial", divider=True)
+    st.dataframe(ss.data, width=1800, height=1200)
+    st.header("Dataset nuevo", divider=True)
+    st.dataframe(ss.data_nuevo17, width=1800, height=1200)  
               
 # Ventana para la visualización de las métricas de evaluación
 if selected == '3. Métricas de evaluación':
