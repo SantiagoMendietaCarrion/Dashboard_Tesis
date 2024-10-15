@@ -597,8 +597,7 @@ if selected == "4. Resultados obtenidos":
     ss.button4_status = ""
 
   # Condicion para poner incialmente el botón 4 en estado de falso
-  if "button4_status" in ss:
-    ss.button4_status = False
+  ss.button4_status = False
 
   # Funcion para cambiar el estado del botón 4
   def button4_clicked():
