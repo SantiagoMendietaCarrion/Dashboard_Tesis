@@ -55,7 +55,10 @@ if selected == '1. Ingreso de archivos':
   
   # Carga del archivo csv
   ss.loaded_csv = st.file_uploader("Escoja el archivo CSV")
-  uploaded_file=ss.loaded_csv
+
+  # Asignación del archivo csv a una nueva variable
+  if ss.loaded_csv is not None:
+    uploaded_file=ss.loaded_csv
 
   # Botón para visualizar el dataset inicial y el nuevo
   if st.button('Guardar el dataset'):
@@ -84,7 +87,7 @@ if selected == '2. Visualización archivos':
   st.title('Visualización de archivos')
   
   # Botón para visualizar el dataset inicial y el nuevo
-  if st.button('Visualizar el dataset'):
+  if st.button('Visualizar y transformar el dataset'):
 
     # Obtener la ruta en donde se guardó el dataset
     save_path = ss.save_path
