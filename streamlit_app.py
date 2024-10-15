@@ -52,16 +52,21 @@ if selected == '1. Ingreso de archivos':
   # Inicializar atributo en st.session_state para guardar el archivo del dataset
   if "loaded_csv" not in ss:
     ss.loaded_csv = ""
+  if "uploaded_file" not in ss:
+    ss.uploaded_file = ""
   
   # Carga del archivo csv
   ss.loaded_csv = st.file_uploader("Escoja el archivo CSV")
 
   # Asignación del archivo csv a una nueva variable
   if ss.loaded_csv is not None:
-    uploaded_file=ss.loaded_csv
+    ss.uploaded_file = ss.loaded_csv
 
   # Botón para visualizar el dataset inicial y el nuevo
   if st.button('Guardar el dataset'):
+
+    # Asignar a una nueva variable
+    uploaded_file = ss.uploaded_file
 
     # Guardar el archivo subido en una carpeta
     save_folder = f'{working_dir}/uploaded_files'
