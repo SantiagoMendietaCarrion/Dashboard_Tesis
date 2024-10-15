@@ -345,6 +345,18 @@ if selected == '3. Métricas de evaluación':
   # Título de la ventana
   st.title('Visualización de las métricas de evaluación')
 
+  # Inicializar las variables en st.session_state
+  if "pcp_df2" not in ss:
+    ss.pcp_df2 = ""
+  if "pcp_report_df2_mod" not in ss:
+    ss.pcp_report_df2_mod = ""
+  if "fig1" not in ss:
+    ss.fig1 = ""
+  if "fig2" not in ss:
+    ss.fig2 = ""
+  if "fig3" not in ss:
+    ss.fig3 = ""
+
   # Botón para visualizar las métricas de evaluación
   if st.button('Calcular las métricas de evaluación'):
   
@@ -505,12 +517,12 @@ if selected == '3. Métricas de evaluación':
     fig3.savefig(save_path_fig3)
     #pcp_precision_recall_curve2 = Image.open('pcp_precision_recall_curve2.png')
 
-    # Inicializar las variables en st.session_state
-    if "pcp_df2" not in ss:
-      ss.pcp_df2 = ""
-
     # Asignación de las variables obtenidas a las variables st.session_state
     ss.pcp_df2 = pcp_df2
+    ss.pcp_report_df2_mod = pcp_report_df2_mod
+    ss.fig1 = fig1
+    ss.fig2 = fig2
+    ss.fig3 = fig3
 
     # Mostrar las métricas de evaluación
     st.header("Dataframe", divider=True)
@@ -525,12 +537,60 @@ if selected == '3. Métricas de evaluación':
     c1, c2 = st.columns(2)
     with c1:
       st.pyplot(fig3)
+    
+  # Realizar la visualización de las métricas de evaluación cuando se encuentran creadas
+  if ss.pcp_report_df2_mod is not "":    
+    # Mostrar las métricas de evaluación
+    st.header("Dataframe", divider=True)
+    st.dataframe(ss.pcp_report_df2_mod)
+    st.header("Gráfico de barras", divider=True)
+    st.pyplot(ss.fig1)
+    st.header("Curva ROC", divider=True)
+    c1, c2 = st.columns(2)
+    with c1:
+      st.pyplot(ss.fig2)
+    st.header("Curva Precision-Recall", divider=True)
+    c1, c2 = st.columns(2)
+    with c1:
+      st.pyplot(ss.fig3)
 
 # Ventana para la visualización de los resultados obtenidos
 if selected == "4. Resultados obtenidos":
 
   # page title
   st.title("Visualización de los resultados obtenidos - Dashboard")
+
+  # Inicializar las variables en st.session_state
+  if "ventas_totales_3_meses" not in ss:
+    ss.ventas_totales_3_meses = ""
+  if "cambio_ventas_ultimo_trimestre" not in ss:
+    ss.cambio_ventas_ultimo_trimestre = ""
+  if "transacciones_totales_3_meses" not in ss:
+    ss.transacciones_totales_3_meses = ""
+  if "cambio_transacciones_ultimo_trimestre" not in ss:
+    ss.cambio_transacciones_ultimo_trimestre = ""
+  if "productos_vendidos_3_meses" not in ss:
+    ss.productos_vendidos_3_meses = ""
+  if "cambio_productos_vendidos_ultimo_trimestre" not in ss:
+    ss.cambio_productos_vendidos_ultimo_trimestre = ""
+  if "clientes_3_meses" not in ss:
+    ss.clientes_3_meses = ""
+  if "cambio_clientes_ultimo_trimestre" not in ss:
+    ss.cambio_clientes_ultimo_trimestre = ""
+  if "fig4" not in ss:
+    ss.fig4 = ""
+  if "fig5" not in ss:
+    ss.fig5 = ""
+  if "fig6" not in ss:
+    ss.fig6 = ""
+  if "fig7" not in ss:
+    ss.fig7 = ""
+  if "fig8" not in ss:
+    ss.fig8 = ""
+  if "fig9" not in ss:
+    ss.fig9 = ""
+  if "fig10" not in ss:
+    ss.fig10 = ""
 
   if st.button('Mostrar los resultados obtenidos'):
 
@@ -626,17 +686,17 @@ if selected == "4. Resultados obtenidos":
     monetary_value_sum = monetary_value_sum.iloc[:, [0, 3, 1, 2]]
 
     # Realizar el gráfico: Date vs Monetary Value (Ventas totales)
-    fig1, ax1 = plt.subplots(layout='constrained', figsize=(17,6))
+    fig4, ax4 = plt.subplots(layout='constrained', figsize=(17,6))
     x=monetary_value_sum['Date_String']
     y1=monetary_value_sum['Monetary_Value_0']
     y2=monetary_value_sum['Monetary_Value_1']
-    ax1.plot(x, y1, label = "Predicted_Purchase_0", color='blue')
-    ax1.plot(x, y2, label = "Predicted_Purchase_1", color='red')
-    ax1.set_xlabel('Date (Year-Month)')
-    ax1.set_ylabel('Monetary_Value (sum)')
-    ax1.set_title('Date vs Monetary_Value (sum) Perceptron Model-Escenario 2-Sin balanceo')
-    ax1.legend(loc='upper center', ncols=2)
-    ax1.set_ylim(0, 200000)
+    ax4.plot(x, y1, label = "Predicted_Purchase_0", color='blue')
+    ax4.plot(x, y2, label = "Predicted_Purchase_1", color='red')
+    ax4.set_xlabel('Date (Year-Month)')
+    ax4.set_ylabel('Monetary_Value (sum)')
+    ax4.set_title('Date vs Monetary_Value (sum) Perceptron Model-Escenario 2-Sin balanceo')
+    ax4.legend(loc='upper center', ncols=2)
+    ax4.set_ylim(0, 200000)
 
     #### Gráficos de Recency, Frequency y Monetary_Value (mean values) #####  
     # Medias de los consumidores que se predijeron que no van a realizar una compra en los siguientes 90 días
@@ -667,24 +727,24 @@ if selected == "4. Resultados obtenidos":
     i=0
     colors=['blue', 'red']
 
-    fig2, ax2 = plt.subplots(layout='constrained', figsize=(10,5))
+    fig5, ax5 = plt.subplots(layout='constrained', figsize=(10,5))
 
     for attribute, measurement in predicted_purchase_rfm.items():
         offset = width * multiplier
-        rects = ax2.bar(x + offset, measurement, width, label=attribute, color=colors[i])
-        ax2.bar_label(rects, padding=3)
+        rects = ax5.bar(x + offset, measurement, width, label=attribute, color=colors[i])
+        ax5.bar_label(rects, padding=3)
         multiplier+= 1
         if i==1:
           i=0
         else:
           i+=1
     # Add some text for labels, title and custom x-axis tick labels, etc.
-    ax2.set_xlabel('RFM Metrics')
-    ax2.set_ylabel('mean values')
-    ax2.set_title('RFM metrics Perceptron Model-Escenario 2-Sin balanceo')
-    ax2.set_xticks(x + width, rfm_metrics)
-    ax2.legend(loc='upper center', ncols=2)
-    ax2.set_ylim(0, 9000)
+    ax5.set_xlabel('RFM Metrics')
+    ax5.set_ylabel('mean values')
+    ax5.set_title('RFM metrics Perceptron Model-Escenario 2-Sin balanceo')
+    ax5.set_xticks(x + width, rfm_metrics)
+    ax5.legend(loc='upper center', ncols=2)
+    ax5.set_ylim(0, 9000)
 
     #### Gráficos de Score (count, percentage) ##### 
     # Dataframe del conteo y porcentaje del score de los clientes que se predijeron que no van a realizar una compra en los siguientes 90 días
@@ -718,24 +778,24 @@ if selected == "4. Resultados obtenidos":
     i=0
     colors=['blue', 'red']
 
-    fig3, ax3 = plt.subplots(layout='constrained', figsize=(10,5))
+    fig6, ax6 = plt.subplots(layout='constrained', figsize=(10,5))
 
     for attribute, measurement in predicted_purchase_score_count.items():
         offset = width * multiplier
-        rects = ax3.bar(x + offset, measurement, width, label=attribute, color=colors[i])
-        ax3.bar_label(rects, padding=3)
+        rects = ax6.bar(x + offset, measurement, width, label=attribute, color=colors[i])
+        ax6.bar_label(rects, padding=3)
         multiplier+= 1
         if i==1:
           i=0
         else:
           i+=1
     # Add some text for labels, title and custom x-axis tick labels, etc.
-    ax3.set_xlabel('Score')
-    ax3.set_ylabel('Count')
-    ax3.set_title('Score vs count Perceptron Model-Escenario 2-Sin balanceo')
-    ax3.set_xticks(x + width, score_values)
-    ax3.legend(loc='upper center', ncols=2)
-    ax3.set_ylim(0, 500)
+    ax6.set_xlabel('Score')
+    ax6.set_ylabel('Count')
+    ax6.set_title('Score vs count Perceptron Model-Escenario 2-Sin balanceo')
+    ax6.set_xticks(x + width, score_values)
+    ax6.legend(loc='upper center', ncols=2)
+    ax6.set_ylim(0, 500)
 
     #### Gráficos de Score vs Recency, Frequency y Monetary_Value (mean values) ##### 
     # Dataframe con la media de recency de acuerdo al score de los clientes que se predijeron que no van a realizar una compra en los siguientes 90 días
@@ -771,25 +831,25 @@ if selected == "4. Resultados obtenidos":
     i=0
     colors=['blue', 'red']
 
-    fig4, ax4 = plt.subplots(layout='constrained', figsize=(10,5))
+    fig7, ax7 = plt.subplots(layout='constrained', figsize=(10,5))
 
     for attribute, measurement in predicted_purchase_score_recency.items():
         offset = width * multiplier
-        rects = ax4.bar(x + offset, measurement, width, label=attribute, color=colors[i])
+        rects = ax7.bar(x + offset, measurement, width, label=attribute, color=colors[i])
         #ax.bar_label(rects, fmt=lambda x: x if x > 0 else '', padding=3)
-        ax4.bar_label(rects, padding=3)
+        ax7.bar_label(rects, padding=3)
         multiplier+= 1
         if i==1:
           i=0
         else:
           i+=1
     # Add some text for labels, title and custom x-axis tick labels, etc.
-    ax4.set_xlabel('Score')
-    ax4.set_ylabel('Recency mean')
-    ax4.set_title('Score vs Recency Perceptron Model-Escenario 2-Sin balanceo')
-    ax4.set_xticks(x + width, score_values)
-    ax4.legend(loc='upper center', ncols=2)
-    ax4.set_ylim(0, 600)
+    ax7.set_xlabel('Score')
+    ax7.set_ylabel('Recency mean')
+    ax7.set_title('Score vs Recency Perceptron Model-Escenario 2-Sin balanceo')
+    ax7.set_xticks(x + width, score_values)
+    ax7.legend(loc='upper center', ncols=2)
+    ax7.set_ylim(0, 600)
 
     # Gráfico de barras agrupado: Score vs Frequency
     score_values = ("0", "1", "2", "3", "4", "5", "6", "7")
@@ -804,24 +864,24 @@ if selected == "4. Resultados obtenidos":
     i=0
     colors=['blue', 'red']
 
-    fig6, ax6 = plt.subplots(layout='constrained', figsize=(10,5))
+    fig9, ax9 = plt.subplots(layout='constrained', figsize=(10,5))
 
     for attribute, measurement in predicted_purchase_score_frequency.items():
         offset = width * multiplier
-        rects = ax6.bar(x + offset, measurement, width, label=attribute, color=colors[i])
-        ax6.bar_label(rects, padding=3)
+        rects = ax9.bar(x + offset, measurement, width, label=attribute, color=colors[i])
+        ax9.bar_label(rects, padding=3)
         multiplier+= 1
         if i==1:
           i=0
         else:
           i+=1
     # Add some text for labels, title and custom x-axis tick labels, etc.
-    ax6.set_xlabel('Score')
-    ax6.set_ylabel('Frequency mean')
-    ax6.set_title('Score vs Frequency Perceptron Model-Escenario 2-Sin balanceo')
-    ax6.set_xticks(x + width, score_values)
-    ax6.legend(loc='upper center', ncols=2)
-    ax6.set_ylim(0, 5000)
+    ax9.set_xlabel('Score')
+    ax9.set_ylabel('Frequency mean')
+    ax9.set_title('Score vs Frequency Perceptron Model-Escenario 2-Sin balanceo')
+    ax9.set_xticks(x + width, score_values)
+    ax9.legend(loc='upper center', ncols=2)
+    ax9.set_ylim(0, 5000)
 
     # Gráfico de barras agrupado: Score vs Monetary_Value
     score_values = ("0", "1", "2", "3", "4", "5", "6", "7")
@@ -836,24 +896,24 @@ if selected == "4. Resultados obtenidos":
     i=0
     colors=['blue', 'red']
 
-    fig7, ax7 = plt.subplots(layout='constrained', figsize=(10,5))
+    fig10, ax10 = plt.subplots(layout='constrained', figsize=(10,5))
 
     for attribute, measurement in predicted_purchase_score_monetary_value.items():
         offset = width * multiplier
-        rects = ax7.bar(x + offset, measurement, width, label=attribute, color=colors[i])
-        ax7.bar_label(rects, padding=3)
+        rects = ax10.bar(x + offset, measurement, width, label=attribute, color=colors[i])
+        ax10.bar_label(rects, padding=3)
         multiplier+= 1
         if i==1:
           i=0
         else:
           i+=1
     # Add some text for labels, title and custom x-axis tick labels, etc.
-    ax7.set_xlabel('Score')
-    ax7.set_ylabel('Monetary_Value mean')
-    ax7.set_title('Score vs Monetary_Value Perceptron Model-Escenario 2-Sin balanceo')
-    ax7.set_xticks(x + width, score_values)
-    ax7.legend(loc='upper center', ncols=2)
-    ax7.set_ylim(0, 140000)
+    ax10.set_xlabel('Score')
+    ax10.set_ylabel('Monetary_Value mean')
+    ax10.set_title('Score vs Monetary_Value Perceptron Model-Escenario 2-Sin balanceo')
+    ax10.set_xticks(x + width, score_values)
+    ax10.legend(loc='upper center', ncols=2)
+    ax10.set_ylim(0, 140000)
 
     #### Mejores productos últimos 3 meses #####   
     # Dataframe mejores productos
@@ -868,16 +928,33 @@ if selected == "4. Resultados obtenidos":
     data9_part1_mejores_productos_head2=data9_part1_mejores_productos_head.sort_values(by='Porcentaje', ascending=True)
 
     # Gráfico de barras de los mejores productos 
-    fig5, ax5 = plt.subplots(layout='constrained', figsize=(10,5))
+    fig8, ax8 = plt.subplots(layout='constrained', figsize=(10,5))
     colores=['lightsteelblue', 'cornflowerblue', 'royalblue', 'mediumblue', 'darkblue']
     x=data9_part1_mejores_productos_head2['Porcentaje']
     y=data9_part1_mejores_productos_head2['Description']
-    ax5.barh(y=y,  width=x, color=colores)
-    ax5.bar_label(ax5.containers[0], padding=3)
-    ax5.set_xlabel('Total sales (%)')
-    ax5.set_ylabel('Product names')
-    ax5.set_title('Products vs Total sales (%) Perceptron Model-Escenario 2-Sin balanceo')
-    ax5.set_xlim(0,2.25)
+    ax8.barh(y=y,  width=x, color=colores)
+    ax8.bar_label(ax8.containers[0], padding=3)
+    ax8.set_xlabel('Total sales (%)')
+    ax8.set_ylabel('Product names')
+    ax8.set_title('Products vs Total sales (%) Perceptron Model-Escenario 2-Sin balanceo')
+    ax8.set_xlim(0,2.25)
+
+    # Asignación de las variables obtenidas a las variables st.session_state
+    ss.ventas_totales_3_meses = ventas_totales_3_meses
+    ss.cambio_ventas_ultimo_trimestre = cambio_ventas_ultimo_trimestre
+    ss.transacciones_totales_3_meses = transacciones_totales_3_meses
+    ss.cambio_transacciones_ultimo_trimestre = cambio_transacciones_ultimo_trimestre
+    ss.productos_vendidos_3_meses = productos_vendidos_3_meses
+    ss.cambio_productos_vendidos_ultimo_trimestre = cambio_productos_vendidos_ultimo_trimestre
+    ss.clientes_3_meses = clientes_3_meses
+    ss.cambio_clientes_ultimo_trimestre = cambio_clientes_ultimo_trimestre
+    ss.fig4 = fig4
+    ss.fig5 = fig5
+    ss.fig6 = fig6
+    ss.fig7 = fig7
+    ss.fig8 = fig8
+    ss.fig9 = fig9
+    ss.fig10 = fig10
 
     ##### Dashboard #####
     # Encabezado del dashboard
@@ -906,8 +983,8 @@ if selected == "4. Resultados obtenidos":
     }
     </style>
     """
-
-    # Impresion de los gráficos de la primera fila
+       
+    # Impresión de los gráficos de la primera fila
     with c1:
       #st.markdown(style, unsafe_allow_html=True)
       st.metric(label="Ventas totales", value=ventas_totales_3_meses, delta=cambio_ventas_ultimo_trimestre)
@@ -918,7 +995,7 @@ if selected == "4. Resultados obtenidos":
     with c4:
       st.metric(label="Clientes", value=clientes_3_meses, delta=cambio_clientes_ultimo_trimestre)
     with c5:
-      st.pyplot(fig1)
+      st.pyplot(fig4)
 
     ## Segunda fila ##
     # Establecer las columnas para los subencabezados de la segunda fila
@@ -937,11 +1014,11 @@ if selected == "4. Resultados obtenidos":
 
     # Impresion de los gráficos de la segunda fila
     with c1:
-      st.pyplot(fig2)
+      st.pyplot(fig5)
     with c2:
-      st.pyplot(fig3)
+      st.pyplot(fig6)
     with c3:
-      st.pyplot(fig4)
+      st.pyplot(fig7)
 
     ## Tercera fila ##
     # Establecer las columnas para los subencabezados de la tercera fila
@@ -960,13 +1037,101 @@ if selected == "4. Resultados obtenidos":
 
     # Impresion de los gráficos de la tercera fila
     with c1:
-      st.pyplot(fig5)
+      st.pyplot(fig8)
     with c2:
-      st.pyplot(fig6)
+      st.pyplot(fig9)
     with c3:
-      st.pyplot(fig7)
+      st.pyplot(fig10)
 
- 
+  # Realizar la visualización de los resultados cuando se encuentran creados
+  if ss.ventas_totales_3_meses is not "":
+    ##### Dashboard #####
+    # Encabezado del dashboard
+    st.header("Dashboard Predicción de compra", divider=True)
+
+    ## Primera fila ##
+    # Establecer las columnas para los subencabezados de la primera fila
+    c1, c2 = st.columns(spec=[0.6, 0.4])
+
+    # Impresión de los subencabezados de la primera fila
+    with c1:
+      st.subheader("Ventas totales (últimos 3 meses)", divider=True)
+    with c2:
+      st.subheader("Ventas/Valor_monetario (total)", divider=True)
+
+    # Establecer las columnas para la visualización de los gráficos de la primera fila
+    c1, c2, c3, c4, c5 = st.columns(spec=[0.15, 0.15, 0.15, 0.15, 0.4])
+
+    # Definir CSS para el color de fondo
+    style = """
+    <style>
+    .metric-container {
+        background-color: #f0f2f6;
+        border-radius: 10px;
+        padding: 10px;
+    }
+    </style>
+    """
+      
+    # Impresión de los gráficos de la primera fila
+    with c1:
+      #st.markdown(style, unsafe_allow_html=True)
+      st.metric(label="Ventas totales", value=ss.ventas_totales_3_meses, delta=ss.cambio_ventas_ultimo_trimestre)
+    with c2:
+      st.metric(label="Transacciones totales", value=ss.transacciones_totales_3_meses, delta=ss.cambio_transacciones_ultimo_trimestre)
+    with c3:
+      st.metric(label="Productos vendidos", value=ss.productos_vendidos_3_meses, delta=ss.cambio_productos_vendidos_ultimo_trimestre)
+    with c4:
+      st.metric(label="Clientes", value=ss.clientes_3_meses, delta=ss.cambio_clientes_ultimo_trimestre)
+    with c5:
+      st.pyplot(ss.fig4)
+
+    ## Segunda fila ##
+    # Establecer las columnas para los subencabezados de la segunda fila
+    c1, c2, c3 = st.columns(spec=[1/3, 1/3, 1/3])
+
+    # Impresión de los subencabezados de la segunda fila
+    with c1:
+      st.subheader("Métricas RFM (promedios)", divider=True)
+    with c2:
+      st.subheader("Score de los clientes (conteo, %)", divider=True)
+    with c3:
+      st.subheader("Score vs Recencia (promedio)", divider=True)
+
+    # Establecer las columnas para la visualización de los gráficos de la segunda fila
+    c1, c2, c3 = st.columns(spec=[1/3, 1/3, 1/3])
+
+    # Impresion de los gráficos de la segunda fila
+    with c1:
+      st.pyplot(ss.fig5)
+    with c2:
+      st.pyplot(ss.fig6)
+    with c3:
+      st.pyplot(ss.fig7)
+
+    ## Tercera fila ##
+    # Establecer las columnas para los subencabezados de la tercera fila
+    c1, c2, c3 = st.columns(spec=[1/3, 1/3, 1/3])
+
+    # Impresión de los subencabezados de la tercera fila
+    with c1:
+      st.subheader("Mejores productos (últimos 3 meses)", divider=True)
+    with c2:
+      st.subheader("Score vs Frecuencia (promedio)", divider=True)
+    with c3:
+      st.subheader("Score vs Valor monetario (promedio)", divider=True)
+
+    # Establecer las columnas para la visualización de los gráficos de la tercera fila
+    c1, c2, c3 = st.columns(spec=[1/3, 1/3, 1/3])
+
+    # Impresion de los gráficos de la tercera fila
+    with c1:
+      st.pyplot(ss.fig8)
+    with c2:
+      st.pyplot(ss.fig9)
+    with c3:
+      st.pyplot(ss.fig10)
+      
 
 
 
