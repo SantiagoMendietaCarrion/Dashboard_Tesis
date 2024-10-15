@@ -104,7 +104,7 @@ if selected == '2. Visualización archivos':
     ss.data_nuevo17 = ""
 
   # Realizar la visualización de los datasets cuando se encuentran creados
-  if ss.data is not None:
+  if ss.data is not "":
     # Mostrar los datasets
     st.header("Dataset inicial", divider=True)
     st.dataframe(ss.data, width=1800, height=1200)
