@@ -325,6 +325,12 @@ if selected == '2. Visualización archivos':
     ss.data9_part2 = data9_part2
     ss.data_nuevo17 = data_nuevo17
 
+    # Mostrar los datasets
+    st.header("Dataset inicial", divider=True)
+    st.dataframe(data, width=1800, height=1200)
+    st.header("Dataset nuevo", divider=True)
+    st.dataframe(data_nuevo17, width=1800, height=1200)    
+
   # Realizar la visualización de los datasets cuando se encuentran creados
   if ss.data is not "":
     # Mostrar los datasets
@@ -517,7 +523,21 @@ if selected == '3. Métricas de evaluación':
     ss.fig1 = fig1
     ss.fig2 = fig2
     ss.fig3 = fig3
-   
+
+    # Mostrar las métricas de evaluación
+    st.header("Dataframe", divider=True)
+    st.dataframe(pcp_report_df2_mod)
+    st.header("Gráfico de barras", divider=True)
+    st.pyplot(fig1)
+    st.header("Curva ROC", divider=True)
+    c1, c2 = st.columns(2)
+    with c1:
+      st.pyplot(fig2)
+    st.header("Curva Precision-Recall", divider=True)
+    c1, c2 = st.columns(2)
+    with c1:
+      st.pyplot(fig3)
+    
   # Realizar la visualización de las métricas de evaluación cuando se encuentran creadas
   if ss.pcp_report_df2_mod is not "":    
     # Mostrar las métricas de evaluación
@@ -573,9 +593,21 @@ if selected == "4. Resultados obtenidos":
     ss.fig10 = ""
   if "fig10" not in ss:
     ss.fig10 = ""
+  if "button4_status" not in ss:
+    ss.button4_status = ""
+
+  # Condicion para poner incialmente el botón 4 en estado de falso
+  ss.button4_status = 0
+
+  # Funcion para cambiar el estado del botón 4
+  def button4_clicked():
+    ss.button4_status = 1
 
   # Botón para mostrar los resultados obtenidos
   if st.button('Mostrar los resultados obtenidos'):
+
+    # Cambiar el estado del bóton 4
+    ss.button4_status = 1
 
     # Asignar el valor a las variables generadas anteriormente
     data9 = ss.data9
@@ -939,8 +971,83 @@ if selected == "4. Resultados obtenidos":
     ss.fig9 = fig9
     ss.fig10 = fig10
 
+    ##### Dashboard #####
+    # Encabezado del dashboard
+    st.header("Dashboard Predicción de compra", divider=True)
+
+    ## Primera fila ##
+    # Establecer las columnas para los subencabezados de la primera fila
+    c1, c2 = st.columns(spec=[0.6, 0.4])
+
+    # Impresión de los subencabezados de la primera fila
+    with c1:
+      st.subheader("Ventas totales (últimos 3 meses)", divider=True)
+    with c2:
+      st.subheader("Ventas/Valor_monetario (total)", divider=True)
+
+    # Establecer las columnas para la visualización de los gráficos de la primera fila
+    c1, c2, c3, c4, c5 = st.columns(spec=[0.15, 0.15, 0.15, 0.15, 0.4])
+       
+    # Impresión de los gráficos de la primera fila
+    with c1:
+      st.metric(label="Ventas totales", value=ventas_totales_3_meses, delta=cambio_ventas_ultimo_trimestre)
+    with c2:
+      st.metric(label="Transacciones totales", value=transacciones_totales_3_meses, delta=cambio_transacciones_ultimo_trimestre)
+    with c3:
+      st.metric(label="Productos vendidos", value=productos_vendidos_3_meses, delta=cambio_productos_vendidos_ultimo_trimestre)
+    with c4:
+      st.metric(label="Clientes", value=clientes_3_meses, delta=cambio_clientes_ultimo_trimestre)
+    with c5:
+      st.pyplot(fig4)
+
+    ## Segunda fila ##
+    # Establecer las columnas para los subencabezados de la segunda fila
+    c1, c2, c3 = st.columns(spec=[1/3, 1/3, 1/3])
+
+    # Impresión de los subencabezados de la segunda fila
+    with c1:
+      st.subheader("Métricas RFM (promedios)", divider=True)
+    with c2:
+      st.subheader("Score de los clientes (conteo, %)", divider=True)
+    with c3:
+      st.subheader("Score vs Recencia (promedio)", divider=True)
+
+    # Establecer las columnas para la visualización de los gráficos de la segunda fila
+    c1, c2, c3 = st.columns(spec=[1/3, 1/3, 1/3])
+
+    # Impresion de los gráficos de la segunda fila
+    with c1:
+      st.pyplot(fig5)
+    with c2:
+      st.pyplot(fig6)
+    with c3:
+      st.pyplot(fig7)
+
+    ## Tercera fila ##
+    # Establecer las columnas para los subencabezados de la tercera fila
+    c1, c2, c3 = st.columns(spec=[1/3, 1/3, 1/3])
+
+    # Impresión de los subencabezados de la tercera fila
+    with c1:
+      st.subheader("Mejores productos (últimos 3 meses)", divider=True)
+    with c2:
+      st.subheader("Score vs Frecuencia (promedio)", divider=True)
+    with c3:
+      st.subheader("Score vs Valor monetario (promedio)", divider=True)
+
+    # Establecer las columnas para la visualización de los gráficos de la tercera fila
+    c1, c2, c3 = st.columns(spec=[1/3, 1/3, 1/3])
+
+    # Impresion de los gráficos de la tercera fila
+    with c1:
+      st.pyplot(fig8)
+    with c2:
+      st.pyplot(fig9)
+    with c3:
+      st.pyplot(fig10)
+
   # Realizar la visualización de los resultados cuando se encuentran creados
-  if ss.ventas_totales_3_meses is not "":
+  if ss.ventas_totales_3_meses is not "" and ss.button4_status==0:
     ##### Dashboard #####
     # Encabezado del dashboard
     st.header("Dashboard Predicción de compra", divider=True)
