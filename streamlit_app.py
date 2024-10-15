@@ -593,11 +593,18 @@ if selected == "4. Resultados obtenidos":
     ss.fig10 = ""
   if "fig10" not in ss:
     ss.fig10 = ""
-  button4_status=False
+  if "button4_status" not in ss:
+    ss.button4_status = ""
 
+  # Condicion para poner incialmente el botón 4 en estado de falso
+  if "button4_status" in ss:
+    ss.button4_status = False
+
+  # Funcion para cambiar el estado del botón 4
   def button4_clicked():
-    button4_status = True
+    ss.button4_status = True
 
+  # Botón para mostrar los resultados obtenidos
   if st.button('Mostrar los resultados obtenidos', on_click=button4_clicked):
 
     # Asignar el valor a las variables generadas anteriormente
@@ -978,21 +985,9 @@ if selected == "4. Resultados obtenidos":
 
     # Establecer las columnas para la visualización de los gráficos de la primera fila
     c1, c2, c3, c4, c5 = st.columns(spec=[0.15, 0.15, 0.15, 0.15, 0.4])
-
-    # Definir CSS para el color de fondo
-    style = """
-    <style>
-    .metric-container {
-        background-color: #f0f2f6;
-        border-radius: 10px;
-        padding: 10px;
-    }
-    </style>
-    """
        
     # Impresión de los gráficos de la primera fila
     with c1:
-      #st.markdown(style, unsafe_allow_html=True)
       st.metric(label="Ventas totales", value=ventas_totales_3_meses, delta=cambio_ventas_ultimo_trimestre)
     with c2:
       st.metric(label="Transacciones totales", value=transacciones_totales_3_meses, delta=cambio_transacciones_ultimo_trimestre)
@@ -1050,7 +1045,7 @@ if selected == "4. Resultados obtenidos":
       st.pyplot(fig10)
 
   # Realizar la visualización de los resultados cuando se encuentran creados
-  if ss.ventas_totales_3_meses is not "" and button4_status==False:
+  if ss.ventas_totales_3_meses is not "" and ss.button4_status==False:
     ##### Dashboard #####
     # Encabezado del dashboard
     st.header("Dashboard Predicción de compra", divider=True)
@@ -1067,21 +1062,9 @@ if selected == "4. Resultados obtenidos":
 
     # Establecer las columnas para la visualización de los gráficos de la primera fila
     c1, c2, c3, c4, c5 = st.columns(spec=[0.15, 0.15, 0.15, 0.15, 0.4])
-
-    # Definir CSS para el color de fondo
-    style = """
-    <style>
-    .metric-container {
-        background-color: #f0f2f6;
-        border-radius: 10px;
-        padding: 10px;
-    }
-    </style>
-    """
       
     # Impresión de los gráficos de la primera fila
     with c1:
-      #st.markdown(style, unsafe_allow_html=True)
       st.metric(label="Ventas totales", value=ss.ventas_totales_3_meses, delta=ss.cambio_ventas_ultimo_trimestre)
     with c2:
       st.metric(label="Transacciones totales", value=ss.transacciones_totales_3_meses, delta=ss.cambio_transacciones_ultimo_trimestre)
