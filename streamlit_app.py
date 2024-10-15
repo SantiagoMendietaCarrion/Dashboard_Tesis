@@ -91,8 +91,20 @@ if selected == '2. Visualización archivos':
   # Título de la ventana
   st.title('Visualización de archivos')
 
+  # Inicializar las variables en st.session_state
+  if "data" not in ss:
+    ss.data = ""
+  if "data9" not in ss:
+    ss.data9 = ""
+  if "data9_part1" not in ss:
+    ss.data9_part1 = ""
+  if "data9_part2" not in ss:
+    ss.data9_part2 = ""
+  if "data_nuevo17" not in ss:
+    ss.data_nuevo17 = ""
+
   # Realizar la visualización de los datasets cuando se encuentran creados
-  if ss.data is not None and ss.data_nuevo17 is not None:
+  if ss.data is not None:
     # Mostrar los datasets
     st.header("Dataset inicial", divider=True)
     st.dataframe(ss.data, width=1800, height=1200)
@@ -315,18 +327,6 @@ if selected == '2. Visualización archivos':
     # Se elimina la variable Interval_Days
     data_nuevo17=data_nuevo16.copy()
     data_nuevo17.drop('Interval_Days', axis=1, inplace=True)
-
-    # Inicializar las variables en st.session_state
-    if "data" not in ss:
-      ss.data = ""
-    if "data9" not in ss:
-      ss.data9 = ""
-    if "data9_part1" not in ss:
-      ss.data9_part1 = ""
-    if "data9_part2" not in ss:
-      ss.data9_part2 = ""
-    if "data_nuevo17" not in ss:
-      ss.data_nuevo17 = ""
 
     # Asignación de las variables obtenidas a las variables st.session_state
     ss.data = data
