@@ -604,7 +604,10 @@ if selected == "4. Resultados obtenidos":
     ss.button4_status = 1
 
   # Botón para mostrar los resultados obtenidos
-  if st.button('Mostrar los resultados obtenidos', on_click=button4_clicked):
+  if st.button('Mostrar los resultados obtenidos'):
+
+    # Cambiar el estado del bóton 4
+    ss.button4_status = 1
 
     # Asignar el valor a las variables generadas anteriormente
     data9 = ss.data9
