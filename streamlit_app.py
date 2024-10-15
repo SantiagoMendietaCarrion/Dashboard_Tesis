@@ -58,7 +58,7 @@ if selected == '1. Ingreso de archivos':
   # Carga del archivo csv
   ss.loaded_csv = st.file_uploader("Escoja el archivo CSV")
 
-  # Asignación del archivo csv a una nueva variable
+  # Asignación condicional del archivo csv a una nueva variable
   if ss.loaded_csv is not None:
     ss.uploaded_file = ss.loaded_csv
 
@@ -90,10 +90,17 @@ if selected == '2. Visualización archivos':
 
   # Título de la ventana
   st.title('Visualización de archivos')
-  
+
+  # Realizar la visualización de los datasets cuando se encuentran creados
+  if ss.data is not None and ss.data_nuevo17 is not None:
+    # Mostrar los datasets
+    st.header("Dataset inicial", divider=True)
+    st.dataframe(ss.data, width=1800, height=1200)
+    st.header("Dataset nuevo", divider=True)
+    st.dataframe(ss.data_nuevo17, width=1800, height=1200) 
+
   # Botón para visualizar el dataset inicial y el nuevo
   if st.button('Visualizar y transformar el dataset'):
-
     # Obtener la ruta en donde se guardó el dataset
     save_path = ss.save_path
 
