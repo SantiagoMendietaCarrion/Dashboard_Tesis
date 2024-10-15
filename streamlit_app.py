@@ -54,7 +54,9 @@ if selected == '1. Ingreso de archivos':
     ss.loaded_csv = ""
   if "uploaded_file" not in ss:
     ss.uploaded_file = ""
-  
+  if "save_path" not in ss:
+    ss.save_path = ""
+      
   # Carga del archivo csv
   ss.loaded_csv = st.file_uploader("Escoja el archivo CSV")
 
@@ -73,17 +75,13 @@ if selected == '1. Ingreso de archivos':
     save_path = Path(save_folder, uploaded_file.name)
     with open(save_path, mode='wb') as w:
       w.write(uploaded_file.getvalue())
-      
-    # Inicializar las variables en st.session_state
-    if "save_path" not in ss:
-      ss.save_path = ""
-      
+
     # Asignación de las variables obtenidas a las variables st.session_state
     ss.save_path = save_path
     
   # Imprimir mensaje de que se ha guardado el archivo
-  if save_path.exists():
-    st.success(f'El archivo {uploaded_file.name} se guardó correctamente.')
+  if ss.save_path is not "":
+    st.success(f'El archivo {ss.uploaded_file.name} se guardó correctamente.')
 
 # Ventana para visualización de archivos
 if selected == '2. Visualización archivos':
