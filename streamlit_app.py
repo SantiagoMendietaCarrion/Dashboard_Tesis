@@ -597,11 +597,11 @@ if selected == "4. Resultados obtenidos":
     ss.button4_status = ""
 
   # Condicion para poner incialmente el botón 4 en estado de falso
-  ss.button4_status = False
+  ss.button4_status = 0
 
   # Funcion para cambiar el estado del botón 4
   def button4_clicked():
-    ss.button4_status = not ss.button4_status
+    ss.button4_status = 1
 
   # Botón para mostrar los resultados obtenidos
   if st.button('Mostrar los resultados obtenidos', on_click=button4_clicked):
@@ -1044,7 +1044,7 @@ if selected == "4. Resultados obtenidos":
       st.pyplot(fig10)
 
   # Realizar la visualización de los resultados cuando se encuentran creados
-  if ss.ventas_totales_3_meses is not "" and ss.button4_status==False:
+  if ss.ventas_totales_3_meses is not "" and ss.button4_status==0:
     ##### Dashboard #####
     # Encabezado del dashboard
     st.header("Dashboard Predicción de compra", divider=True)
