@@ -601,7 +601,7 @@ if selected == "4. Resultados obtenidos":
 
   # Funcion para cambiar el estado del botón 4
   def button4_clicked():
-    ss.button4_status = True
+    ss.button4_status = not ss.button4_status
 
   # Botón para mostrar los resultados obtenidos
   if st.button('Mostrar los resultados obtenidos', on_click=button4_clicked):
