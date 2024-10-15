@@ -591,8 +591,14 @@ if selected == "4. Resultados obtenidos":
     ss.fig9 = ""
   if "fig10" not in ss:
     ss.fig10 = ""
+  if "fig10" not in ss:
+    ss.fig10 = ""
+  button4_status=False
 
-  if st.button('Mostrar los resultados obtenidos'):
+  def button4_clicked():
+    button4_status = True
+
+  if st.button('Mostrar los resultados obtenidos', on_click=button4_clicked):
 
     # Asignar el valor a las variables generadas anteriormente
     data9 = ss.data9
@@ -1044,7 +1050,7 @@ if selected == "4. Resultados obtenidos":
       st.pyplot(fig10)
 
   # Realizar la visualización de los resultados cuando se encuentran creados
-  if ss.ventas_totales_3_meses is not "":
+  if ss.ventas_totales_3_meses is not "" and button4_status==False:
     ##### Dashboard #####
     # Encabezado del dashboard
     st.header("Dashboard Predicción de compra", divider=True)
