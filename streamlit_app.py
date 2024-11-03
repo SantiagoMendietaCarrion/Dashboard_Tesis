@@ -118,7 +118,7 @@ if selected == '2. Visualización dataset':
 if selected == '3. Transformación dataset':
 
   # Título de la ventana
-  st.title('Transformar el dataset inicial')
+  st.title('Transformación del dataset inicial')
 
   # Inicializar las variables en st.session_state
   if "data9" not in ss:
