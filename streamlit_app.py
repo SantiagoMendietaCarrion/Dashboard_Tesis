@@ -67,7 +67,7 @@ if selected == '1. Ingreso de archivos':
   if ss.loaded_csv is not None:
     ss.uploaded_file = ss.loaded_csv
 
-  # Botón para visualizar el dataset inicial y el nuevo
+  # Botón para visualizar el dataset inicial 
   if st.button('Guardar el dataset'):
 
     # Asignar a una nueva variable
@@ -110,7 +110,7 @@ if selected == '2. Visualización dataset':
 
   # Realizar la visualización de los datasets cuando se encuentran creados
   if ss.data is not "":
-    # Mostrar los datasets
+    # Mostrar el dataset inicial
     st.header("Dataset inicial", divider=True)
     st.dataframe(ss.data, width=1800, height=1200)
   
@@ -130,8 +130,8 @@ if selected == '3. Transformación dataset':
   if "data_nuevo17" not in ss:
     ss.data_nuevo17 = ""
 
-  # Botón para visualizar el dataset inicial y el nuevo
-  if st.button('Visualizar y transformar el dataset'):
+  # Botón para transformar el dataset inicial y visualizar el dataset nuevo
+  if st.button('Transformar el dataset inicial y visualizar el dataset nuevo'):
 
     # Obtener el dataset inicial
     data = ss.data
@@ -351,9 +351,9 @@ if selected == '3. Transformación dataset':
     ss.data9_part2 = data9_part2
     ss.data_nuevo17 = data_nuevo17
 
-  # Realizar la visualización de los datasets cuando se encuentran creados
+  # Realizar la visualización del dataset nuevo cuando ya se encuentran creado
   if ss.data_nuevo17 is not "":
-    # Mostrar los datasets
+    # Mostrar el dataset nuevo
     st.header("Dataset nuevo", divider=True)
     st.dataframe(ss.data_nuevo17, width=1800, height=1200) 
              
