@@ -37,10 +37,9 @@ with st.sidebar:
     selected = option_menu('Sistema de predicción de compra',
 
                            ['1. Ingreso de archivos',
-                            '2. Visualización dataset',
-                            '3. Transformación dataset',
-                            '4. Métricas de evaluación',
-                            '5. Resultados obtenidos'],
+                            '2. Visualización archivos',
+                            '3. Métricas de evaluación',
+                            '4. Resultados obtenidos'],
                            menu_icon='house',
                            icons=['cloud-upload', 'cast', 'cast', 'cast'],
                            default_index=0)
@@ -86,41 +85,15 @@ if selected == '1. Ingreso de archivos':
   if ss.save_path is not "":
     st.success(f'El archivo {ss.uploaded_file.name} se guardó correctamente.')
 
-# Ventana para visualización del dataset inicial
-if selected == '2. Visualización dataset':
+# Ventana para visualización de archivos
+if selected == '2. Visualización archivos':
 
   # Título de la ventana
-  st.title('Visualización del dataset inicial')
+  st.title('Visualización de archivos')
 
   # Inicializar las variables en st.session_state
   if "data" not in ss:
     ss.data = ""
-  
-  # Botón para visualizar el dataset inicial
-  if st.button('Visualizar el dataset inicial'):
-
-    # Obtener la ruta en donde se guardó el dataset
-    save_path = ss.save_path
-
-    # Obtener el dataset inicial
-    data = pd.read_csv(save_path, sep=",")
-
-    # Asignación de las variables obtenidas a las variables st.session_state
-    ss.data = data
-
-  # Realizar la visualización de los datasets cuando se encuentran creados
-  if ss.data is not "":
-    # Mostrar los datasets
-    st.header("Dataset inicial", divider=True)
-    st.dataframe(ss.data, width=1800, height=1200)
-  
-# Ventana para visualización del dataset inicial
-if selected == '3. Transformación dataset':
-
-  # Título de la ventana
-  st.title('Transformar el dataset inicial')
-
-  # Inicializar las variables en st.session_state
   if "data9" not in ss:
     ss.data9 = ""
   if "data9_part1" not in ss:
@@ -132,9 +105,11 @@ if selected == '3. Transformación dataset':
 
   # Botón para visualizar el dataset inicial y el nuevo
   if st.button('Visualizar y transformar el dataset'):
+    # Obtener la ruta en donde se guardó el dataset
+    save_path = ss.save_path
 
     # Obtener el dataset inicial
-    data = ss.data
+    data = pd.read_csv(save_path, sep=",")
 
     # Cambiar el nombre de la columna Customer ID
     data.rename(columns={'Customer ID':'CustomerID'}, inplace=True)
@@ -346,19 +321,22 @@ if selected == '3. Transformación dataset':
     data_nuevo17.drop('Interval_Days', axis=1, inplace=True)
 
     # Asignación de las variables obtenidas a las variables st.session_state
+    ss.data = data
     ss.data9 = data9
     ss.data9_part1 = data9_part1
     ss.data9_part2 = data9_part2
     ss.data_nuevo17 = data_nuevo17
 
   # Realizar la visualización de los datasets cuando se encuentran creados
-  if ss.data_nuevo17 is not "":
+  if ss.data is not "":
     # Mostrar los datasets
+    st.header("Dataset inicial", divider=True)
+    st.dataframe(ss.data, width=1800, height=1200)
     st.header("Dataset nuevo", divider=True)
-    st.dataframe(ss.data_nuevo17, width=1800, height=1200) 
-             
+    st.dataframe(ss.data_nuevo17, width=1800, height=1200)  
+              
 # Ventana para la visualización de las métricas de evaluación
-if selected == '4. Métricas de evaluación':
+if selected == '3. Métricas de evaluación':
 
   # Título de la ventana
   st.title('Visualización de las métricas de evaluación')
@@ -559,7 +537,7 @@ if selected == '4. Métricas de evaluación':
       st.pyplot(ss.fig3)
 
 # Ventana para la visualización de los resultados obtenidos
-if selected == "5. Resultados obtenidos":
+if selected == "4. Resultados obtenidos":
 
   # page title
   st.title("Visualización de los resultados obtenidos - Dashboard")
