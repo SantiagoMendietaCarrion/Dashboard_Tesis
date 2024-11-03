@@ -19,6 +19,7 @@ from sklearn.metrics import PrecisionRecallDisplay
 from PIL import Image
 from streamlit import session_state as ss
 from pathlib import Path
+from streamlit_chunk_file_uploader import uploader
 
 # Establecer la configuración de la página
 st.set_page_config(page_title="Purchase prediction",
@@ -58,7 +59,8 @@ if selected == '1. Ingreso de archivos':
     ss.save_path = ""
       
   # Carga del archivo csv
-  ss.loaded_csv = st.file_uploader("Escoja el archivo CSV")
+  ##ss.loaded_csv = st.file_uploader("Escoja el archivo CSV")
+  ss.loaded_csv=uploader("Escoja el archivo CSV", key="chunk_uploader", chunk_size=32)
 
   # Asignación condicional del archivo csv a una nueva variable
   if ss.loaded_csv is not None:
