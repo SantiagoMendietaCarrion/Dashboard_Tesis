@@ -61,7 +61,7 @@ if selected == '1. Ingreso de archivos':
       
   # Carga del archivo csv
   ##ss.loaded_csv = st.file_uploader("Escoja el archivo CSV")
-  ss.loaded_csv=uploader("Escoja el archivo CSV", key="chunk_uploader", chunk_size=21)
+  ss.loaded_csv=uploader("Escoja el archivo CSV", key="chunk_uploader", chunk_size=31)
 
   # Asignación condicional del archivo csv a una nueva variable
   if ss.loaded_csv is not None:
