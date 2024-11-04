@@ -58,10 +58,13 @@ if selected == '1. Ingreso de archivos':
     ss.uploaded_file = ""
   if "save_path" not in ss:
     ss.save_path = ""
+  if "file_list_size" not in ss:
+    ss.file_list_size = ""
       
   # Carga del archivo csv
   ##ss.loaded_csv = st.file_uploader("Escoja el archivo CSV")
-  ss.loaded_csv=uploader("Escoja el archivo CSV", key="chunk_uploader", chunk_size=21)
+  ##ss.loaded_csv=uploader("Escoja el archivo CSV", key="chunk_uploader", chunk_size=21)
+  ss.loaded_csv = st.file_uploader("Escoja el archivo CSV", accept_multiple_files=True)
 
   # Asignación condicional del archivo csv a una nueva variable
   if ss.loaded_csv is not None:
@@ -73,18 +76,29 @@ if selected == '1. Ingreso de archivos':
     # Asignar a una nueva variable
     uploaded_file = ss.uploaded_file
 
-    # Guardar el archivo subido en una carpeta
-    save_folder = f'{working_dir}/uploaded_files'
-    save_path = Path(save_folder, uploaded_file.name)
-    with open(save_path, mode='wb') as w:
-      w.write(uploaded_file.getvalue())
+    # Número de los archivos subidos
+    ss.file_list_size = len(uploaded_file)
+    file_list_size = ss.file_list_size
 
-    # Asignación de las variables obtenidas a las variables st.session_state
-    ss.save_path = save_path
+    # Direccion de la carpeta para guardar los archivos
+    save_folder = f'{working_dir}/uploaded_files'
+
+    # Lista para guardar el path de los archivos subidos
+    save_path = []
+
+    # Bucle for para leer la lista de archivos subidos
+    for i in range(0, file_list_size):
+      # Guardar los archivos subidos en una carpeta
+      save_path.append(Path(save_folder, uploaded_file[i].name))
+      with open(save_path[i], mode='wb') as w:
+        w.write(uploaded_file[i].getvalue())
+      # Asignación de las variables obtenidas a las variables st.session_state
+      ss.save_path = save_path
     
   # Imprimir mensaje de que se ha guardado el archivo
   if ss.save_path is not "":
-    st.success(f'El archivo {ss.uploaded_file.name} se guardó correctamente.')
+    for i in range(0, file_list_size):
+      st.success(f'El archivo {ss.uploaded_file[i].name} se guardó correctamente.')
 
 # Ventana para visualización del dataset inicial
 if selected == '2. Visualización dataset':
@@ -95,16 +109,33 @@ if selected == '2. Visualización dataset':
   # Inicializar las variables en st.session_state
   if "data" not in ss:
     ss.data = ""
-  
+ 
   # Botón para visualizar el dataset inicial
   if st.button('Visualizar el dataset inicial'):
 
     # Obtener la ruta en donde se guardó el dataset
     save_path = ss.save_path
 
-    # Obtener el dataset inicial
-    data = pd.read_csv(save_path, sep=",")
+    # Obtener el número de archivos subidos
+    file_list_size = ss.file_list_size
 
+    # Definir lista para guardar las partes del dataframe
+    data_partes = []
+
+    # Obtener el dataset inicial
+    for i in range(0,  file_list_size):
+      # Leer las partes del dataset que se encuentran en archivos csv
+      data_partes.append(pd.read_csv(save_path[i], sep=","))
+
+    if file_list_size>1:
+      for i in range(1,  file_list_size):
+        # Unir las partes del dataset obtenidas de los archivos csv
+        data_partes[0] = pd.concat([data_partes[0], data_partes[i]], axis=0)
+        data_partes[0].reset_index(drop=True, inplace=True)
+    
+    # Asignar el primer elemento de la lista a la variable data
+    data = data_partes[0]
+        
     # Asignación de las variables obtenidas a las variables st.session_state
     ss.data = data
 
