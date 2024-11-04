@@ -94,11 +94,13 @@ if selected == '1. Ingreso de archivos':
         w.write(uploaded_file[i].getvalue())
       # Asignación de las variables obtenidas a las variables st.session_state
       ss.save_path = save_path
+      # Imprimir mensaje de que se ha guardado el archivo
+      st.success(f'El archivo {uploaded_file[i].name} se guardó correctamente.')
     
   # Imprimir mensaje de que se ha guardado el archivo
-  if ss.save_path is not "":
-    for i in range(0, file_list_size):
-      st.success(f'El archivo {ss.uploaded_file[i].name} se guardó correctamente.')
+  #if ss.save_path is not "":
+  #  for i in range(0, ss.file_list_size):
+  #    st.success(f'El archivo {ss.uploaded_file[i].name} se guardó correctamente.')
 
 # Ventana para visualización del dataset inicial
 if selected == '2. Visualización dataset':
@@ -131,7 +133,7 @@ if selected == '2. Visualización dataset':
       for i in range(1,  file_list_size):
         # Unir las partes del dataset obtenidas de los archivos csv
         data_partes[0] = pd.concat([data_partes[0], data_partes[i]], axis=0)
-        data_partes[0].reset_index(drop=True, inplace=True)
+      data_partes[0].reset_index(drop=True, inplace=True)
     
     # Asignar el primer elemento de la lista a la variable data
     data = data_partes[0]
